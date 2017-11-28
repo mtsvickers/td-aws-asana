@@ -13,7 +13,7 @@ const client = asana.Client.create().useAccessToken('0/12009f5040317e5c2b0235da5
 */
 	
 	var eData = {
-		data: "TDAsana GetTasks"
+		data: "TDAsana GetTasks RETURN name,id,assignee"
 	};
 	var dataArray = eData.data.trim().split(" ");
 
@@ -22,15 +22,13 @@ const client = asana.Client.create().useAccessToken('0/12009f5040317e5c2b0235da5
 			
 	//Setup Default Metadata  
 	var getTaskMeta = {
-		workspace: 498346170860, //process.env.TD_DEFAULT_WORKSPACE
 		opt_fields: 'id,name,projects,assignee,assignee_status,created_at,completed_at,completed,due_at,notes',
-		assignee: 'me'
 	};
 	
 	if( dataArray.length > 2 ) {
 		//arrays stored separately because of concern with using symbols as object property names
-		var symbols = [ '+', '@', '#', '>', '<', '*' ];
-		var argumentNames = [ 'projects', 'tags', 'due_on', 'assignee', 'followers', 'workspace'];
+		var symbols = [ '+', '@', '!', '$', '>', '*' ];
+		var argumentNames = [ 'project', 'tag', 'completed_since', 'modified_since', 'assignee', 'workspace' ];
 		var needArgs = true;
 		var contentType = "";
 		var sep = " ";
@@ -49,7 +47,6 @@ const client = asana.Client.create().useAccessToken('0/12009f5040317e5c2b0235da5
 				contentType = argumentNames[symbolIndex];
 				getTaskMeta[contentType] = elem.slice(1);
 				sep = " ";
-				needArgs = false;
 			}
 			else if( elem.toLowerCase() == 'return' ) {
 				//Optional Arguments Ahead.
@@ -64,6 +61,19 @@ const client = asana.Client.create().useAccessToken('0/12009f5040317e5c2b0235da5
 			
 		}//for each word in string
 	} //If we have arguments
+	
+	//If we don't have a project or tag, make sure we have an assignee and workspace.
+	if( ! getTaskMeta.project && ! getTaskMeta.tag ) {
+		
+		if( ! getTaskMeta.assignee ) {
+			getTaskMeta.assignee = "me";
+		}
+		
+		if( ! getTaskMeta.workspace ) {
+			getTaskMeta.workspace = 498346170860; //process.env.TD_DEFAULT_WORKSPACE
+		}
+		
+	}
 	
 	//console.log(getTaskMeta);
 
