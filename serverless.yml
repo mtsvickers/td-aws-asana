@@ -1,0 +1,22 @@
+#
+# For full config options, check the docs:
+#    docs.serverless.com
+
+
+service: td-aws-asana
+provider:
+  name: aws
+  runtime: nodejs6.10
+  region: us-west-2
+  versionFunctions: false
+  profile: asanatest
+  memorySize: 256
+  environment:
+  REGION: ${opt:region, self:provider.region}
+  package:
+  exclude:
+    - "events/**"
+
+functions:
+  parseTDAsanaRequest:
+    handler: handlers.parseRequest

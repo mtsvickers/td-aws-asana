@@ -1,10 +1,9 @@
-'use strict';
-//require('dotenv').config();
+require('dotenv').config();
 
 const asana = require('asana');
-const client = asana.Client.create().useAccessToken('0/12009f5040317e5c2b0235da5e178a9d'); //process.env.TD_ASANA_ACCESS_TOKEN
+const client = asana.Client.create().useAccessToken(process.env.TD_ASANA_ACCESS_TOKEN);
 
-//exports.handler = (event, context, callback) => {
+module.exports = (event, context, callback) => {
 	
 
 /*
@@ -70,7 +69,7 @@ const client = asana.Client.create().useAccessToken('0/12009f5040317e5c2b0235da5
 		}
 		
 		if( ! getTaskMeta.workspace ) {
-			getTaskMeta.workspace = 498346170860; //process.env.TD_DEFAULT_WORKSPACE
+			getTaskMeta.workspace = process.env.TD_DEFAULT_WORKSPACE;
 		}
 		
 	}
@@ -83,4 +82,4 @@ const client = asana.Client.create().useAccessToken('0/12009f5040317e5c2b0235da5
 		console.log( response.data );
 	});
 			
-//};
+};
