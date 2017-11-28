@@ -6,23 +6,24 @@ const client = asana.Client.create().useAccessToken('0/12009f5040317e5c2b0235da5
 
 //exports.handler = (event, context, callback) => {
 	
-	//Find out what function we are trying to call
+
 /*
 	var dataArray = event.data.trim().split(" ");
 	var functType = dataObj[1]; //second word will always be the function name
+*/
 	
 	var eData = {
 		data: "TDAsana GetTasks"
 	};
 	var dataArray = eData.data.trim().split(" ");
-*/
+
 	
 	/* GET TASK */
 			
-	//Setup Default Metadata
+	//Setup Default Metadata  
 	var getTaskMeta = {
 		workspace: 498346170860, //process.env.TD_DEFAULT_WORKSPACE
-		//opt_fields: 'id,name,projects,assignee,assignee_status,created_at,completed_at,completed,due_at,notes',
+		opt_fields: 'id,name,projects,assignee,assignee_status,created_at,completed_at,completed,due_at,notes',
 		assignee: 'me'
 	};
 	
@@ -64,10 +65,12 @@ const client = asana.Client.create().useAccessToken('0/12009f5040317e5c2b0235da5
 		}//for each word in string
 	} //If we have arguments
 	
-	console.log(getTaskMeta);
-	
+	//console.log(getTaskMeta);
+
 	//Try to get the tasks and return the response.
-	var response = client.tasks.findAll(getTaskMeta);	
-	console.log(response.data);
+	client.tasks.findAll(getTaskMeta)
+	.then(function(response) {
+		console.log( response.data );
+	});
 			
 //};
