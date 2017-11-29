@@ -20,3 +20,7 @@ provider:
 functions:
   parseTDAsanaRequest:
     handler: handlers.parseRequest
+  getAsanaTasks:
+    handler: handlers.getTasks
+  addAsanaTask:
+    handler: handlers.addTask
