@@ -6,9 +6,6 @@ const client = asana.Client.create().useAccessToken(process.env.TD_ASANA_ACCESS_
 module.exports = ({ data }, context, callback) => {
 
 	const dataArray = data.trim().split(" ");
-
-	
-	/* GET TASK */
 			
 	//Setup Default Metadata  
 	var getTaskMeta = {
