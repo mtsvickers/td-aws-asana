@@ -78,9 +78,7 @@ module.exports = (event, context, callback) => {
 			
 		} //For each child object of event
 	} //for each potentially named arg
-	
-	console.log(instances);
-			
+				
 	var Promise = require('bluebird');
 	Promise.all(instances.map(function(instance) {
 		
@@ -99,7 +97,7 @@ module.exports = (event, context, callback) => {
 		return client.workspaces.typeahead(workspace, params)
 		.then(function(response) {
 			if( response.data[0] && response.data[0].id ) {
-				var thisID = response.data[0].id
+				var thisID = response.data[0].id.toString();
 				return thisID;
 			} else {
 				console.log(params.query+" not found.");
@@ -134,10 +132,10 @@ module.exports = (event, context, callback) => {
 								}
 							}
 						}
-						return { project:pID, section: sID };
+						return { project:pID.toString(), section: sID.toString() };
 						
 					}
-					else { return { project:pID, section: false}; }
+					else { return { project:pID.toString(), section: false}; }
 				})
 				.catch(function(error) {
 			        console.log(error);

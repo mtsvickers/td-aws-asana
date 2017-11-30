@@ -13,42 +13,11 @@ const client = asana.Client.create().useAccessToken(process.env.TD_ASANA_ACCESS_
 module.exports = ({ data }, context, callback) => {
 	
 	/**
-	 * Returns the ID of a task, project, user, etc. from Asana based on a typeahead search.
-	 *
-	 * @param string name - the name to search
-	 * @param string type - the type of search (task, project, etc)
-	 * @param int workspace - the workspace ID
-	 */
-	function searchByName( name, type, workspace ) {
-		
-		if( ! workspace ) { workspace = process.env.TD_DEFAULT_WORKSPACE; }
-		
-		var params = {
-			type: type,
-			query: name,
-			count: 1
-		}
-		
-		client.workspaces.typeahead(workspace, params)
-		.then(function(response) {
-			var thisID = response.data[0].id
-			console.log(thisID);
-			return thisID;
-		})
-		.catch(function(error) {
-	        var error = new Error(error);
-			callback(error);
-			return false;
-	    });
-	    		
-	} //End searchByName()
-	
-	/**
-	 * Parses a string of arguments into an object based and returns it.
+	 * Parses a string of arguments into an object and returns it.
 	 *
 	 * @param string argString - the string of arguments to parse.
 	 */
-	function parseArguments( argString, exemptions ) {
+	function parseArguments( argString ) {
 		var symbols = [ "+", "@", "#", ">", "<", "!", "$", "^", "*", "~", "|" ];
 		var argNames = [ "project", "tag", "due_on", "assignee", "followers", "completed_since", "modified_since", "parent", "workspace", "notes", "opt_fields"];
 		
@@ -115,6 +84,7 @@ module.exports = ({ data }, context, callback) => {
 								'section': m[1]	
 							};
 							memberships.push(member);
+							itemVal.push(m[0]);
 							
 						}
 					} else {
@@ -143,33 +113,15 @@ module.exports = ({ data }, context, callback) => {
 		    offset = nextIndex;
 			
 		}//while we have data in our string
-		
-		//We needed to wait to swap names for IDs in case we were given a workspace to use. Let's swap them now.
-		var argsWithIDs = ["name", "project", "section", "tag","assignee","followers", "parent", "memberships.project", "memberships.section"];
-		var lookupTypes = ["task", "project", "section", "tag", "user", "user", "task", "project", "section"]
-		var workspace = "";
-		if( parsedData.workspace ) { workspace = parsedData.workspace; }
-		
-		//for each argument which exists, is not a number, and is not exempt, try to convert them to ids.
-/*
-		for( var i = 0; i < lookupTypes.length; i++) {
-			var arg = argsWithIDs[i];
-			if( parsedData[arg] && isNaN(parsedData[arg]) && ( exemptions.indexOf(argsWithIDs[i]) < 0 ) ) {
-				var dataID = searchByName( parsedData[arg], lookupTypes[i], workspace );
-				console.log(dataID);
-				if( dataID ) {
-					parsedData[arg] = dataID;
-				}
-			}
-		}
-*/
-		
+						
 		//Return our parsed data.
 		return parsedData;
 		
 	} //parse Arguments function
 
-	/* The Main Code */
+	/*************
+	The Main Code 
+	**************/
 	const requestData = data.trim();
 	var formattedRequest = {};
 	
@@ -180,7 +132,7 @@ module.exports = ({ data }, context, callback) => {
 	}
 	else {
 	
-		//Since we can't check in the step function if the next step exists
+		//Since we can't check in the step function if the request type exists
 		const knownLambdas = [ "FindTasks", "GetTask", "AddTask", "UpdateTask" ]
 		
 		//The first thing should always be the mode/request type
@@ -207,20 +159,13 @@ module.exports = ({ data }, context, callback) => {
 					dataString = dataArray[0].trim();
 					var modifications = dataArray[1].trim();
 					
-					//make new task name exempt from the "names should be ids" logic.
-					var exempt = ['name'];
-					var parsedMod = parseArguments(modifications, exempt);
+					var parsedMod = parseArguments(modifications);
 					if( parsedMod ) {
 						formattedRequest.modifications = parsedMod;
 					}
 				}
 				
-				//don't try to find an id on a new task name.
-				var exemptions = [];
-				if( mode == "AddTask" ) { exemptions.push("name"); }
-				
-				
-				parsedData = parseArguments( dataString, exemptions );
+				parsedData = parseArguments( dataString );
 				if( parsedData ) {
 					formattedRequest.request = parsedData;
 				}
@@ -232,7 +177,6 @@ module.exports = ({ data }, context, callback) => {
 					
 			} //If we had data to parse.
 			
-			console.log(formattedRequest);
 			callback(null, formattedRequest);
 		} //Function name was valid
 	} //We had some data
