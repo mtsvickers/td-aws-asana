@@ -42,6 +42,8 @@ module.exports = (event, context, callback) => {
 		if( ! createTaskMeta.assignee ) {
 			createTaskMeta.assignee = "me";
 		}
+		
+		console.log(createTaskMeta);
 			
 		//Try to create the tasks and return the response.
 		client.tasks.create(createTaskMeta)

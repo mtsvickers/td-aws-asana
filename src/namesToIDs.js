@@ -16,8 +16,8 @@ module.exports = (event, context, callback) => {
 	var inputObject = event;
 	var mode = event.mode;
 	
-	var argsWithIDs = ["name", "project", "section", "tag","assignee","followers", "parent"];
-	var lookupTypes = ["task", "project", "section", "tag", "user", "user", "task"]
+	var argsWithIDs = ["name", "project", "section", "tag","assignee","followers", "parent", "memberships"];
+	var lookupTypes = ["task", "project", "section", "tag", "user", "user", "task", "project"]
 	var workspace = process.env.TD_DEFAULT_WORKSPACE;
 	if( event.request.workspace ) { event.request.workspace; }
 	
@@ -27,62 +27,52 @@ module.exports = (event, context, callback) => {
 		lookupTypes.splice(0,1);
 	}
 	
+	//Save any objects in events we want to look through.
+	var childObjects = [
+		{ obj: event.request, path: "request" },
+		{ obj: event.modifications, path: "modifications" }
+	];
+	
 	//Let's find anything we need to convert in the request and/or modifications objects, and put it in an array.
 	var instances = [];
 	for( var i = 0; i < lookupTypes.length; i++) {
-		
 		var arg = argsWithIDs[i];
-		
-		//if property exists, is not a number, and is not property assignee with value me.
-		if( event.request[arg] && isNaN( event.request[arg] ) && ! (arg == "assignee" && event.request[arg] == "me") ) {
-			var instance = {
-				type: lookupTypes[i],
-				query: event.request[arg],
-				path: "request",
-				arg: arg
-			}
-			instances.push(instance);
-		}
-		if( event.modifications && event.modifications[arg] && "name" != arg && isNaN( event.modifications[arg] ) && ! (arg == "assignee" && event.modifications[arg] == "me") ) {
-			var instance = {
-				type: lookupTypes[i],
-				query: event.modifications[arg],
-				path: "modifications",
-				arg: arg
-			}
-			instances.push(instance);
-		}
-		
+		for( var j = 0; j < childObjects.length; j++ ) {
+			
+			var obj = childObjects[j].obj;
+			var path = childObjects[j].path;
+			
+			//Names are tricky. If this is a name and should stay a name, skip it.
+			if( arg == "name" && ( path != "request" || mode == "AddTask") ) { continue; }
+			
+			//if property exists, is not a number, and is not assignee with value me.
+			if( obj[arg] && isNaN( obj[arg] ) && ! (arg == "assignee" && obj[arg] == "me") ) {
+				
+				var instance = {
+					type: lookupTypes[i],
+					path: path,
+					arg: arg
+				}
+				if( Array.isArray(obj[arg]) && obj[arg].length > 0 ) {
+					//This is an array. Go ahead and loop through it.
+					for( var k = 0; k < obj[arg].length; k++ ) {
+						if( isNaN( obj[arg][k] ) ) {
+							instance.query = obj[arg][k];
+							instance.index = k;
+							instances.push(instance);
+						}
+					}
+				} else {
+					//Not an array. Just add it.
+					instance.query = obj[arg];
+					instances.push(instance);
+				}
+				
+			} //if we have stuff to save.
+			
+		} //For each child object of event
 	} //for each potentially named arg
-	
-	//Memberships are more complex. Grab them seperately.
-	if( event.request.memberships && event.request.memberships.length > 0 ) {
-		for( var i = 0; i < event.request.memberships.length; i++ ) {
-			if( event.request.memberships[i].project && isNaN(event.request.memberships[i].project) ) {
-				var instance = {
-					type: "membership",
-					query: event.request.memberships[i],
-					path: "request",
-					arg: i
-				}
-				instances.push(instance);
-			}
-		}
-	}
-	if( event.modifications && event.modifications.memberships && event.modifications.memberships.length > 0 ) {
-		for( var i = 0; i < event.modifications.memberships.length; i++ ) {
-			if( event.modifications.memberships[i].project && isNaN(event.modifications.memberships[i].project) ) {
-				var instance = {
-					type: "membership",
-					query: event.modifications.memberships[i],
-					path: "modifications",
-					arg: i
-				}
-				instances.push(instance);
-			}
-		}
-	}
-		
+			
 	var Promise = require('bluebird');
 	Promise.all(instances.map(function(instance) {
 		
@@ -92,9 +82,8 @@ module.exports = (event, context, callback) => {
 			count: 1
 		};
 		
-		//handle membership
+		//handle membership which needs two calls.
 		if( instance.type == "membership" ) {
-			params.type = "project";
 			params.query = instance.query.project,
 			params.next = instance.query.section
 		}
@@ -161,14 +150,16 @@ module.exports = (event, context, callback) => {
 			if( results[i] ) {
 				var instance = instances[i];
 				
-				if( instance.type == "membership" ) {
-					inputObject[instance.path].memberships[instance.arg] = results[i];
+				//converted names are IDs. Store them there, and in the top level of the object.
+				if( instance.arg == "name" ) {
+					inputObject[instance.path].id = results[i];
+					inputObject.taskID = results[i];
+				}
+				else if ( instance.index ) {
+					inputObject[instance.path][instance.arg][instance.index] = val;
 				}
 				else {
 					inputObject[instance.path][instance.arg] = results[i];
-					if( instance.path == "request" && instance.arg == "name" ) {
-						inputObject.taskID = results[i];
-					}
 				}
 			}
 		}
