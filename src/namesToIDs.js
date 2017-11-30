@@ -165,7 +165,7 @@ module.exports = (event, context, callback) => {
 					inputObject[instance.path].id = val;
 					inputObject.taskID = val;
 				}
-				else if ( instance.index ) {
+				else if ( 'index' in instance ) {
 					inputObject[instance.path][instance.arg][instance.index] = val;
 				}
 				else {
