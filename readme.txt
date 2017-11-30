@@ -33,6 +33,7 @@ $ = Modified Since
  *		- created_at
  *		- completed_at
  *		- due_at
+ *		- due_on
  *		- notes
  *		- completed
  */
@@ -51,29 +52,21 @@ GetTask 1234567 |name,due_date
 	FIND TASK(S)
 ***********************/
 /**
- * Arguments 
- * 		+ = Project				// A single project ID (optional)
- * 		@ = tag					// A single tag ID (optional)
- * 		> = Assignee			// Default is your user. (optional if project or tag is provided)
+ * Available Arguments 
  * 		! = Completed Since		// Returns incomplete or completed since the given time. (optional)
  *		$ = Modified Since		// Returns tasks modified since date. (optional)
- * 		* = Workspace			// The ID. Default is set in .env (optional if project or tag is provided)
- *		| = Return				//The comma separated args to return. See possible values below. Default is all. Usage: |info1,info2,info3
- *	If you do not specify a project or tag, this will pull by workspace and assignee. 
- *  If none are provided your defaults will be used.
  *
- * Return arguments are optional. If left blank this will return all information about the task(s)
- * Possible Return values:
- *		- id
- *		- name
- *		- projects
- *		- assignee
- *		- assignee_status
- *		- created_at
- *		- completed_at
- *		- due_at
- *		- notes
- *		- completed
+ *		AND
+ *
+ * 		* = Workspace			// The ID. Default is set in .env (optional if project or tag is provided)
+ *		> = Assignee			// Default is your user. (optional if project or tag is provided)
+ *		OR
+ *		+ = Project				// A single project ID (optional)
+ *		OR
+ * 		@ = tag					// A single tag ID (optional)
+ * 
+ *  If you specify project or tag you must NOT specify workspace or assignee.
+ *  If no arguments are provided your default workspace and user will be used.
  */
  
 USAGE:

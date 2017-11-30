@@ -20,29 +20,13 @@ module.exports = (event, context, callback) => {
 		
 	}
 	
-	//Find out what we should return.  
-	var returnFields = ['id','name','projects','assignee','assignee_status','created_at','completed_at','completed','due_on','due_at','notes'];
-	if( event.request.opt_fields && ( event.request.opt_fields.length > 0 ) ) {
-		returnFields = event.request.opt_fields;
-	}
-	
 	//Try to get the tasks and return the response.
+	console.log(getTaskMeta);
 	client.tasks.findAll(getTaskMeta)
 	.then(function(response) {
 		
-		var returnObj = [];
-		//loop through the tasks returned and store what we need to return
-		for( var j = 0; j < response.data.length; j++) {
-			var taskData = {};
-			var task = response.data[j];
-			for( var i = 0; i < returnFields.length; i++) {
-				var field = returnFields[i];
-				taskData[field] = task[field];
-			}
-			returnObj.push(taskData);
-		}
-		console.log(returnObj);
-		callback(null, returnObj);
+		console.log(response.data);
+		callback(null, response.data);
 		
 	})
 	.catch(function(error) {

@@ -187,7 +187,8 @@ module.exports = ({ data }, context, callback) => {
 		var i = requestData.indexOf(' ');
 		if( i <= 0 ) { i = requestData.length; }
 		var mode = requestData.substring( 0, i );
-	
+		formattedRequest.mode = mode;
+		
 		//If the function doesn't exist, throw an error.
 		if( knownLambdas.indexOf(mode) < 0 ) {
 			var error = new Error("Call to unknown function "+mode);
