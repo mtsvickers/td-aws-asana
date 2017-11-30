@@ -31,14 +31,16 @@ module.exports = ({ data }, context, callback) => {
 		
 		client.workspaces.typeahead(workspace, params)
 		.then(function(response) {
-			return response.id;
+			var thisID = response.data[0].id
+			console.log(thisID);
+			return thisID;
 		})
 		.catch(function(error) {
 	        var error = new Error(error);
 			callback(error);
 			return false;
 	    });
-		
+	    		
 	} //End searchByName()
 	
 	/**
@@ -48,7 +50,7 @@ module.exports = ({ data }, context, callback) => {
 	 */
 	function parseArguments( argString, exemptions ) {
 		var symbols = [ "+", "@", "#", ">", "<", "!", "$", "^", "*", "~", "|" ];
-		var argNames = [ "project", "tag", "due_date", "assignee", "followers", "completed_since", "modified_since", "parent", "workspace", "notes", "opt_fields"];
+		var argNames = [ "project", "tag", "due_on", "assignee", "followers", "completed_since", "modified_since", "parent", "workspace", "notes", "opt_fields"];
 		
 		var parsedData = {};
 		var moreData = true;
@@ -149,15 +151,18 @@ module.exports = ({ data }, context, callback) => {
 		if( parsedData.workspace ) { workspace = parsedData.workspace; }
 		
 		//for each argument which exists, is not a number, and is not exempt, try to convert them to ids.
+/*
 		for( var i = 0; i < lookupTypes.length; i++) {
 			var arg = argsWithIDs[i];
 			if( parsedData[arg] && isNaN(parsedData[arg]) && ( exemptions.indexOf(argsWithIDs[i]) < 0 ) ) {
 				var dataID = searchByName( parsedData[arg], lookupTypes[i], workspace );
+				console.log(dataID);
 				if( dataID ) {
 					parsedData[arg] = dataID;
 				}
 			}
 		}
+*/
 		
 		//Return our parsed data.
 		return parsedData;
