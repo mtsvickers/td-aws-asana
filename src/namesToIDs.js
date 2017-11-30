@@ -29,9 +29,11 @@ module.exports = (event, context, callback) => {
 	
 	//Save any objects in events we want to look through.
 	var childObjects = [
-		{ obj: event.request, path: "request" },
-		{ obj: event.modifications, path: "modifications" }
+		{ obj: event.request, path: "request" }
 	];
+	if( event.modifications ) {
+		childObjects.push( { obj: event.modifications, path: "modifications" } );
+	}
 	
 	//Let's find anything we need to convert in the request and/or modifications objects, and put it in an array.
 	var instances = [];
@@ -41,13 +43,12 @@ module.exports = (event, context, callback) => {
 			
 			var obj = childObjects[j].obj;
 			var path = childObjects[j].path;
-			
+						
 			//Names are tricky. If this is a name and should stay a name, skip it.
 			if( arg == "name" && ( path != "request" || mode == "AddTask") ) { continue; }
-			
+						
 			//if property exists, is not a number, and is not assignee with value me.
 			if( obj[arg] && isNaN( obj[arg] ) && ! (arg == "assignee" && obj[arg] == "me") ) {
-				
 				var instance = {
 					type: lookupTypes[i],
 					path: path,
@@ -83,7 +84,7 @@ module.exports = (event, context, callback) => {
 		};
 		
 		//handle membership which needs two calls.
-		if( instance.type == "membership" ) {
+		if( instance.arg == "membership" ) {
 			params.query = instance.query.project,
 			params.next = instance.query.section
 		}
@@ -149,17 +150,18 @@ module.exports = (event, context, callback) => {
 		for( var i = 0; i < instances.length; i++ ) {
 			if( results[i] ) {
 				var instance = instances[i];
+				var val = results[i];
 				
 				//converted names are IDs. Store them there, and in the top level of the object.
 				if( instance.arg == "name" ) {
-					inputObject[instance.path].id = results[i];
-					inputObject.taskID = results[i];
+					inputObject[instance.path].id = val;
+					inputObject.taskID = val;
 				}
 				else if ( instance.index ) {
 					inputObject[instance.path][instance.arg][instance.index] = val;
 				}
 				else {
-					inputObject[instance.path][instance.arg] = results[i];
+					inputObject[instance.path][instance.arg] = val;
 				}
 			}
 		}

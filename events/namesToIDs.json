@@ -1,19 +1,19 @@
 {
-	"modifications": { 
-		"name": "My New Task Name",
-		"notes": "These are notes I want to put in the task.",
-		"due_date": "2017-12-25",
-		"assignee": "marissa"
-	},
-	"request": { 
-		"name": "Dummy",
-		"project": "Tester",
-		"tag": "msv",
-		"memberships": [
-			{
-				"project": "MSV",
-				"section": "Another"
-			}
-		]
-	}
+  "mode": "AddTask",
+  "request": {
+    "name": "Naming Test 1",
+    "memberships": [
+      {
+        "project": "MSV",
+        "section": "Another"
+      }
+    ],
+    "project": [],
+    "tag": [
+      "msv tag 1",
+      "msv tag 2"
+    ],
+    "due_on": "2018-12-25",
+    "notes": "This is a dummy task which we are testing to try to create with lots of options."
+  }
 }
