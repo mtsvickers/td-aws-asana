@@ -1,0 +1,19 @@
+{
+	"modifications": { 
+		"name": "My New Task Name",
+		"notes": "These are notes I want to put in the task.",
+		"due_date": "2017-12-25",
+		"assignee": "marissa"
+	},
+	"request": { 
+		"name": "Dummy",
+		"project": "Tester",
+		"tag": "msv",
+		"memberships": [
+			{
+				"project": "MSV",
+				"section": "Another"
+			}
+		]
+	}
+}

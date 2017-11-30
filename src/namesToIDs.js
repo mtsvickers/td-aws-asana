@@ -46,21 +46,26 @@ module.exports = (event, context, callback) => {
 						
 			//Names are tricky. If this is a name and should stay a name, skip it.
 			if( arg == "name" && ( path != "request" || mode == "AddTask") ) { continue; }
-						
+			
 			//if property exists, is not a number, and is not assignee with value me.
 			if( obj[arg] && isNaN( obj[arg] ) && ! (arg == "assignee" && obj[arg] == "me") ) {
 				var instance = {
 					type: lookupTypes[i],
 					path: path,
 					arg: arg
-				}
+				};
 				if( Array.isArray(obj[arg]) && obj[arg].length > 0 ) {
 					//This is an array. Go ahead and loop through it.
 					for( var k = 0; k < obj[arg].length; k++ ) {
 						if( isNaN( obj[arg][k] ) ) {
-							instance.query = obj[arg][k];
-							instance.index = k;
-							instances.push(instance);
+							var thisInstance = {
+								type: lookupTypes[i],
+								path: path,
+								arg: arg,
+								query: obj[arg][k],
+								index: k,
+							};
+							instances.push(thisInstance);
 						}
 					}
 				} else {
@@ -73,6 +78,8 @@ module.exports = (event, context, callback) => {
 			
 		} //For each child object of event
 	} //for each potentially named arg
+	
+	console.log(instances);
 			
 	var Promise = require('bluebird');
 	Promise.all(instances.map(function(instance) {
@@ -84,7 +91,7 @@ module.exports = (event, context, callback) => {
 		};
 		
 		//handle membership which needs two calls.
-		if( instance.arg == "membership" ) {
+		if( instance.arg == "memberships" ) {
 			params.query = instance.query.project,
 			params.next = instance.query.section
 		}
@@ -95,6 +102,7 @@ module.exports = (event, context, callback) => {
 				var thisID = response.data[0].id
 				return thisID;
 			} else {
+				console.log(params.query+" not found.");
 				return false;
 			}
 			
