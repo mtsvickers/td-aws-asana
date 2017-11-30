@@ -42,7 +42,7 @@ module.exports = (event, context, callback) => {
 			returnObj.push(taskData);
 		}
 		console.log(returnObj);
-		return returnObj;
+		callback(null, returnObj);
 		
 	})
 	.catch(function(error) {

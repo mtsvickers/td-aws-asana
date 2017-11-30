@@ -22,7 +22,7 @@ module.exports = (event, context, callback) => {
 			returnObj[field] = response[field];
 		}
 		console.log(returnObj);
-		return returnObj;
+		callback(null, returnObj);
 	})
 	.catch(function(error) {
         var error = new Error(error);

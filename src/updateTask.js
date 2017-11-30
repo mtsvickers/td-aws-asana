@@ -33,7 +33,7 @@ module.exports = (event, context, callback) => {
 			client.tasks.update(taskID, mods)
 			.then(function(response) {
 				console.log(response);
-				return response.id;
+				callback(null, response.id);
 			})
 			.catch(function(error) {
 		        var error = new Error(error);

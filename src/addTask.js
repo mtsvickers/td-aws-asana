@@ -42,7 +42,7 @@ module.exports = (event, context, callback) => {
 		//Try to create the tasks and return the response.
 		client.tasks.create(createTaskMeta)
 		.then(function(response) {
-			return response.id;
+			callback(null, response.id);
 		})
 		.catch(function(error) {
 	        var error = new Error(error);

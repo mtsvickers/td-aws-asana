@@ -187,7 +187,6 @@ module.exports = ({ data }, context, callback) => {
 		var i = requestData.indexOf(' ');
 		if( i <= 0 ) { i = requestData.length; }
 		var mode = requestData.substring( 0, i );
-		formattedRequest.mode = mode;
 	
 		//If the function doesn't exist, throw an error.
 		if( knownLambdas.indexOf(mode) < 0 ) {
@@ -233,7 +232,7 @@ module.exports = ({ data }, context, callback) => {
 			} //If we had data to parse.
 			
 			console.log(formattedRequest);
-			return formattedRequest;
+			callback(null, formattedRequest);
 		} //Function name was valid
 	} //We had some data
 };
