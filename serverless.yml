@@ -18,6 +18,8 @@ provider:
     - "events/**"
 
 functions:
+  namesToIDs:
+    handler: handlers.namesToIDs
   parseTDAsanaRequest:
     handler: handlers.parseTaskRequest
   getAsanaTask:

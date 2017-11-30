@@ -1,3 +1,9 @@
+/**
+ * Gets a task or tasks from Asana based on various filters.
+ *
+ * Returns an object containing the tasks names and ids
+ */
+
 require('dotenv').config();
 
 const asana = require('asana');
