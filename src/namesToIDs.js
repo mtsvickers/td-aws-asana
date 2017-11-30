@@ -43,7 +43,7 @@ module.exports = (event, context, callback) => {
 			}
 			instances.push(instance);
 		}
-		if( event.modifications[arg] && "name" != arg && isNaN( event.modifications[arg] ) && ! (arg == "assignee" && event.modifications[arg] == "me") ) {
+		if( event.modifications && event.modifications[arg] && "name" != arg && isNaN( event.modifications[arg] ) && ! (arg == "assignee" && event.modifications[arg] == "me") ) {
 			var instance = {
 				type: lookupTypes[i],
 				query: event.modifications[arg],
@@ -69,7 +69,7 @@ module.exports = (event, context, callback) => {
 			}
 		}
 	}
-	if( event.modifications.memberships && event.modifications.memberships.length > 0 ) {
+	if( event.modifications && event.modifications.memberships && event.modifications.memberships.length > 0 ) {
 		for( var i = 0; i < event.modifications.memberships.length; i++ ) {
 			if( event.modifications.memberships[i].project && isNaN(event.modifications.memberships[i].project) ) {
 				var instance = {
