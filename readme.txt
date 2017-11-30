@@ -144,6 +144,7 @@ TDAsana AddTask My Dynamic Task +Project 1:Section 1,Project 2
  *		#  = Due Date			// Change the due date. In the format: #YYYY-MM-DD
  */
 
+//** NOTE: Append to notes not yet working.
  
  USAGE
  TDAsana UpdateTask [taskname] [filter arguments] % [new name optional] [update arguments]

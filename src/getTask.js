@@ -29,4 +29,4 @@ module.exports = (event, context, callback) => {
 		callback(error);
 		return false;
     });
-};
+}; //end module.exports
