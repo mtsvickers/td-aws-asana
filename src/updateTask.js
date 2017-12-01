@@ -12,7 +12,6 @@ module.exports = (event, context, callback) => {
 	if( ! taskID || isNaN( taskID ) ) {
 		var error = new Error("Invalid task identifier: '"+taskID+'.');
 		callback(error);
-		return false;
 	}
 	else {
 				

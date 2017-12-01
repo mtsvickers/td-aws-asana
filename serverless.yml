@@ -32,3 +32,5 @@ functions:
     handler: handlers.updateTask
   findProjectTag:
     handler: handlers.findProjectTag
+  commentOnTask:
+    handler: handlers.commentOnTask
