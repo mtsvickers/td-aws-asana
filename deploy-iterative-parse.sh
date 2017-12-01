@@ -40,6 +40,6 @@ aws stepfunctions create-state-machine \
 --name "$SFN_NAME"-v"$VERSION_NUMBER" \
 --region "$REGION" \
 --role-arn arn:aws:iam::"$ACCOUNT_ID":role/service-role/StatesExecutionRole-"$REGION" \
---definition "$(cat $SFN_NAME.json)"
+--definition "$(cat production_sfn.json)"
 
 rm production_sfn.json
