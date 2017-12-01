@@ -18,8 +18,10 @@ provider:
     - "awscli-bundle.zip"
     - "awscli-bundle/**"
     - "deploy-iterative-parse.sh"
-    - "iterative-parse.json"
+    - "deployenv.sh"
+    - "deployenv.sh.sample"
     - "events/**"
+    - "iterative-parse.json"
 
 functions:
   namesToIDs:
