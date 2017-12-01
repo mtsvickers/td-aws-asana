@@ -26,13 +26,12 @@ module.exports = (event, context, callback) => {
 		if( ! hasChanges ) {
 			var error = new Error("No valid changes were requested.");
 			callback(error);
-			return false;
 		}
 		else {
 			
 			//If we are appending notes and we have the current task notes, let's update our notes var to reflect that.
 			if( mods.notes && mods.notes.charAt(0) === "&" && event.taskInfo && event.taskInfo.notes ) {
-				var temp = event.taskInfo.notes + "/n" + mods.notes.slice(1);
+				var temp = event.taskInfo.notes + "\n" + mods.notes.slice(1);
 				mods.notes = temp;
 			}
 			
@@ -44,7 +43,6 @@ module.exports = (event, context, callback) => {
 			.catch(function(error) {
 		        var error = new Error(error);
 				callback(error);
-				return false;
 		    });
 			
 		} //We have changes to make.
