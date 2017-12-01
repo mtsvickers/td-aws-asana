@@ -15,6 +15,10 @@ provider:
   REGION: ${opt:region, self:provider.region}
   package:
   exclude:
+    - "awscli-bundle.zip"
+    - "awscli-bundle/**"
+    - "deploy-iterative-parse.sh"
+    - "iterative-parse.json"
     - "events/**"
 
 functions:
