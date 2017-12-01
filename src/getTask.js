@@ -27,6 +27,5 @@ module.exports = (event, context, callback) => {
 	.catch(function(error) {
         var error = new Error(error);
 		callback(error);
-		return false;
     });
 }; //end module.exports

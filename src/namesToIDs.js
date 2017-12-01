@@ -173,6 +173,10 @@ module.exports = (event, context, callback) => {
 		}
 		//console.log(inputObject);
 		callback(null, inputObject);
-	});
+	})
+	.catch(function(error) {
+        var error = new Error(error);
+		callback(error);
+    });
 	
 };

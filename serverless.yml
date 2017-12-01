@@ -30,3 +30,5 @@ functions:
     handler: handlers.addTask
   updateAsanaTask:
     handler: handlers.updateTask
+  findProjectTag:
+    handler: handlers.findProjectTag
