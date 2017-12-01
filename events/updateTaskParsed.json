@@ -1,9 +1,30 @@
 {
 	"modifications": { 
 		"name": "My New Task Name",
-		"notes": "These are notes I want to put in the task.",
+		"notes": "&These are notes I want to append to the current task notes.",
 		"due_date": "2017-12-25" 
 	},
 	"request": { "id": "490764297621893" },
-	"taskID": "490764297621893"
+	"taskID": "490764297621893",
+	"taskInfo": {
+      "id": 490764297621893,
+      "name": "Testing All Allowed updates",
+      "projects": [
+        {
+          "id": 490764297621890,
+          "name": "MSV Testing"
+        }
+      ],
+      "assignee": {
+        "id": 32140157319985,
+        "name": "Marissa Solomon"
+      },
+      "assignee_status": "inbox",
+      "created_at": "2017-11-29T15:03:48.117Z",
+      "completed_at": null,
+      "completed": false,
+      "due_on": "2017-12-25",
+      "due_at": null,
+      "notes": "These are notes I want to put in my task."
+    }
 }

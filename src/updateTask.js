@@ -20,7 +20,7 @@ module.exports = (event, context, callback) => {
 		var hasChanges = false;
 		if( event.modifications ) {
 			mods = event.modifications;
-			if( mods.assignee || mods.note || mods.due_date || mods.name ) { hasChanges = true; }
+			if( mods.assignee || mods.notes || mods.due_date || mods.name ) { hasChanges = true; }
 		}
 		
 		if( ! hasChanges ) {
@@ -29,6 +29,12 @@ module.exports = (event, context, callback) => {
 			return false;
 		}
 		else {
+			
+			//If we are appending notes and we have the current task notes, let's update our notes var to reflect that.
+			if( mods.notes && mods.notes.charAt(0) === "&" && event.taskInfo && event.taskInfo.notes ) {
+				var temp = event.taskInfo.notes + "/n" + mods.notes.slice(1);
+				mods.notes = temp;
+			}
 			
 			client.tasks.update(taskID, mods)
 			.then(function(response) {
