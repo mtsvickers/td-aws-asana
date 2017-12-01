@@ -26,7 +26,6 @@ module.exports = (event, context, callback) => {
 		if( event.type && event.type.length > 0 ) {
 			type = event.type;
 		}
-		
 		if( event.workspace && ! isNaN( event.workspace ) ) {
 			workspace = event.workspace;
 		}
