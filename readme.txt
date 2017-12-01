@@ -147,6 +147,26 @@ TDAsana AddTask My Dynamic Task +Project 1:Section 1,Project 2
  //Find task named "Your Task" in "Your Project" and assign it to myself.
   TDAsana Update Your Task +Your Project % >me
   
+/**********************
+	COMMENT ON TASK
+***********************/
+/**
+ * Adds a comment to an asana task.
+ * Returns the comment ID if successful, false or error if not.
+ *
+ * @param int taskID - the ID of the task to add the comment to.
+ * @param string comment - the Comment to add.
+ */
+ 
+EXAMPLE JSON INPUT
+{
+	"taskID": "490764297621893",
+	"comment": "This is a comment we added from our lambda."
+}
+
+EXAMPLE OUTPUT
+493117300474807
+  
 /***********************************
 	GET ASANA ELEMENT ID BY NAME
 ***********************************/
