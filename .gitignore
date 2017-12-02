@@ -7,3 +7,4 @@ jspm_packages
 
 # env files and events
 .env
+deployenv.sh

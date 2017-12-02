@@ -15,7 +15,13 @@ provider:
   REGION: ${opt:region, self:provider.region}
   package:
   exclude:
+    - "awscli-bundle.zip"
+    - "awscli-bundle/**"
+    - "deploy-iterative-parse.sh"
+    - "deployenv.sh"
+    - "deployenv.sh.sample"
     - "events/**"
+    - "iterative-parse.json"
 
 functions:
   namesToIDs:
