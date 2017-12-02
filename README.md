@@ -3,19 +3,30 @@ Lambda functions which make calls to the Asana API to run various tasks such as 
 
 ## Table Of Contents
 [Argument Key](#argkey) - a list of available argument symbols
+
 [Parse Request](#parseRequest) - parses a string of arguments into an object of argumentName:argumentValue
+
 [Find Tasks](#findTasks) - returns data on all tasks matching given filtering parameters
+
 [Get Task by id](#getTask) - get data about specific task by task id.
+
 [Convert Names to IDs](#convertNames) - takes an object and replaces certain named properties with their IDs based on a typeahead search.
+
 [Get ID by Name](#getID) - takes a single string name and a type (project, tag, etc) and returns the id based on a typeahead search
+
 [Add Task](#addTask) - adds a new Asana task based on given parameters
+
 [Update Task](#updateTask) - updates a task based on a given task ID and update parameters
+
 [Comment On Task](#commentTask) - adds a given comment to the task with the given ID
 
 ## <a name="argkey"></a>Argument Key
 These are all of the available argument symbols used by these functions.
+
 Not all of the arguments are available on all functions.
+
 Please see the function documentation to view the arguments available to that function.
+
 ```
 + = Projects
 : = Section
@@ -34,30 +45,34 @@ $ = Modified Since
 
 ## <a name="parseRequest"></a>Parse Request
 parses a string of arguments into an object of argumentName:argumentValue
+
 This function will parse all symbol arguments listed above.
+
 If the first element in the string is not prefixed with a symbol, it is assumed to be the task ID or name.
 
-###Input Parameters
+### Input Parameters
 string `data` - the string containing the arguments to be parsed.
+
 string `mode` - the mode to run this function in.
-	Allowed Modes:
-	* `AddTask`
-	* `GetTask`
-	* `FindTasks`
-	* `UpdateTask`
+
+Allowed Modes:
+* `AddTask`
+* `GetTask`
+* `FindTasks`
+* `UpdateTask`
 	
 
-###Output
+### Output
 Object containing the parsed data as properties.
 
-###Example Add Task Request
-####INPUT
+### Example Add Task Request
+#### INPUT
 ```
 {
 	"data": "New Task Name +Project Name:Section Name @tag1,tag2 ^Parent Task #2018-12-25 ~This makes a new task and these will be the notes. >me"
 }
 ```
-####OUTPUT
+#### OUTPUT
 ```
 {
 	"request": {
@@ -77,14 +92,14 @@ Object containing the parsed data as properties.
 }
 ```
 
-###Example Update Task Request
-####INPUT
+### Example Update Task Request
+#### INPUT
 ```
 {
 	"data": "UpdateTask My Current Task Name % New Task Name ~&These are notes I want to append to my task. #2017-12-25"
 }
 ```
-####OUTPUT
+#### OUTPUT
 ```
 {
 	"modifications": { 
@@ -99,14 +114,14 @@ Object containing the parsed data as properties.
 }
 ```
 
-###Example Get Task Request
-####INPUT
+### Example Get Task Request
+#### INPUT
 ```
 {
 	"data": "1234567 |name,due_date"
 }
 ```
-####Output
+#### Output
 ```
 {
 	"request": { "id": "490979385512957", "opt_fields": [ "name", "due_on" ] },
@@ -117,28 +132,37 @@ Object containing the parsed data as properties.
 ## <a name="findTasks"></a>Find Tasks
 returns data on all tasks matching given filtering parameters
 
-###Input Parameters
+### Input Parameters
 Object `request` containing properties which represent the parameters which limit the search.
 
-####Avalable Properties
+#### Avalable Properties
 If you specify project or tag you must NOT specify workspace or assignee.
+
 If no arguments are provided this will return all tasks in the default workspace assigned to the API token's user.
 
 `completed_since` - Returns incomplete tasks or tasks completed since the given time.
+
 `modified_since` - Returns tasks modified since this date.
 
+
  AND
+ 
 `workspace` - The workspace ID
+
 `assignee` - The Assignee's ID or 'me' for the API user, which is the default.
+
 OR
+
 `project` - the project ID
+
 OR
+
 `tag` - the tag ID
 
-###Output
+### Output
 an array of the IDs and names of the tasks found based on the filters.
 
-###Example Input
+### Example Input
 ```
 { 
     "request": {
@@ -147,7 +171,7 @@ an array of the IDs and names of the tasks found based on the filters.
 }
 ```
 
-###Example Output
+### Example Output
 ```
 [ 
   { id: 490764297621893, name: 'Testing Append' },
@@ -162,26 +186,28 @@ an array of the IDs and names of the tasks found based on the filters.
 ## <a name="getTask"></a>Get Task by ID
 return all or some information about a task based on a given task ID
 
-###Input
+### Input
 `taskID` - Required. The ID of the task to get information about.
-`opt_fields` - Optional. An array of fields to return. Default is all of them
-	Available `opt_field` args:
-	`id`
-	`name`
-	`projects`
-	`assignee`
-	`assignee_status`
-	`created_at`
-	`completed_at`
-	`due_at`
-	`due_on`
-	`notes`
-	`completed`
 
-###Output
+`opt_fields` - Optional. An array of fields to return. Default is all of them
+
+Available `opt_field` args:
+* `id`
+* `name`
+* `projects`
+* `assignee`
+* `assignee_status`
+* `created_at`
+* `completed_at`
+* `due_at`
+* `due_on`
+* `notes`
+* `completed`
+
+### Output
 An Object with the task information requested (or all information by default)
 
-###Example Input
+### Example Input
 ```
 {
 	"request": { "opt_fields": [ "name", "due_on" ] },
@@ -189,7 +215,7 @@ An Object with the task information requested (or all information by default)
 }
 ```
 
-###Example Output
+### Example Output
 ```
 {
     "name": "TDAsana AddTask All Options",
@@ -201,36 +227,38 @@ An Object with the task information requested (or all information by default)
 
 ## <a name="convertNames"></a>Convert Names To IDs
 searches for named properties in event.request and event.modifications which Asana will want as IDs in other functions
+
 does a typeahead search on each of these properties and replaces the names with the corresponding IDs in the original input object
 
-###Input
+### Input
 an object containing various asana argument properties in the .request and .modification properties.
 
-####Converted Properies
+#### Converted Properies
 `request`
-	* `name`	//unless event.mode is set to AddTask
-	* `project`
-	* `section`
-	* `tag`
-	* `assignee`
-	* `followers`
-	* `parent`
-	* `memberships.project`
-	* `memberships.section`
-`modifications`
-	* `project`
-	* `section`
-	* `tag`
-	* `assignee`
-	* `followers`
-	* `parent`
-	* `memberships.project`
-	* `memberships.section`
+* `name`	//unless event.mode is set to AddTask
+* `project`
+* `section`
+* `tag`
+* `assignee`
+* `followers`
+* `parent`
+* `memberships.project`
+* `memberships.section`
 
-###Output
+`modifications`
+* `project`
+* `section`
+* `tag`
+* `assignee`
+* `followers`
+* `parent`
+* `memberships.project`
+* `memberships.section`
+
+### Output
 The input object with any of the properties above which contained names replaced with IDs.
 
-###Example Input
+### Example Input
 ```
 {
 	"modifications": { 
@@ -253,7 +281,7 @@ The input object with any of the properties above which contained names replaced
 }
 ```
 
-###Example Output
+### Example Output
 ```
 {
     "modifications": {
@@ -281,20 +309,25 @@ The input object with any of the properties above which contained names replaced
 ## <a name="getID"></a>Get ID by name
 Takes at minimum a name string and does a typeahead search to find the matching ID
 
-###Input
+### Input
 `data` - Required. String. The Name of the element to find.
+
 `type` - Optional. String. The type of element to find. Default is 'project'
-	Allowed Type Values:
-	* `project`
-	* `tag`
-	* `task`
-	* `user`
+
+Allowed Type Values:
+
+* `project`
+* `tag`
+* `task`
+* `user`
+
 `workspace` - Optional. The ID of the workspace to search in. If not specified the default will be used.
 
-###Output
+### Output
+
 The ID of the element, if found.
 
-###Example Input
+### Example Input
 ```
 {
 	"data": "asana auto",
@@ -302,34 +335,36 @@ The ID of the element, if found.
 }
 ```
 
-###Example Output
+### Example Output
 `490764297621890`
 
 ## <a name="addTask"></a>Add Task
 Adds a new Asana Task based on given parameters.
 
-###Input
+### Input
 A `request` object containing properties determining what to add to the task.
+
 Available Request Parameters:
-	* `name` 		- Required. The new tasks's name.
-	* `projects` 	- Optional. A single project ID or array of IDs
-	* `tags` 		- Optional. A single tag ID or array of IDs
-	* `parent` 		- Optional. A parent task ID
-	* `assignee` 	- Optional. Default is your user.
-	* `followers` 	- Optional. A single user ID or array of IDs
-	* `workspace` 	- Optional. The workspace ID.
-	* `notes` 		- Optional. A string containing the task notes
-	* `due_on` 		- Optional. In the format: YYYY-MM-DD
-	* `memberships` - Optional. An array of objects containing project and section pairs.
-	* `memberships[n].project` - the project id the section is in
-	* `memberships[n].section` - the section id this task should be added to.
+
+* `name` 		- Required. The new tasks's name.
+* `projects` 	- Optional. A single project ID or array of IDs
+* `tags` 		- Optional. A single tag ID or array of IDs
+* `parent` 		- Optional. A parent task ID
+* `assignee` 	- Optional. Default is your user.
+* `followers` 	- Optional. A single user ID or array of IDs
+* `workspace` 	- Optional. The workspace ID.
+* `notes` 		- Optional. A string containing the task notes
+* `due_on` 		- Optional. In the format: YYYY-MM-DD
+* `memberships` - Optional. An array of objects containing project and section pairs.
+* `memberships[n].project` - the project id the section is in
+* `memberships[n].section` - the section id this task should be added to.
 
 *Note* - You may not have projects and memberships. You must use one or the other.
 	
-###Output
+### Output
 The task ID
 
-###Example Input
+### Example Input
 ```
 {
 	"request": {
@@ -348,26 +383,30 @@ The task ID
 }
 ```
 
-###Example Output
+### Example Output
 `123456789`
 
 ## <a name="updateTask"></a>Update Task
 Updates an existing task based on the given parameters.
 
-###Input
+### Input
 `taskID` - Required. The ID of the task to update
+
 `taskInfo` - Optional. An object containing the current task information. Needed if you want to append to notes.
+
 `modifications` - Required. At least one of the modifications properties must be set and non-empty.
-	Available Modification Properties
-	* `name` - the new task name
-	* `notes` - the new task notes. If the first character in notes is `&` these will be appended to the current task notes.
-	* `assignee` - the user ID or 'me' the task should be assigned to.
-	* `due_on` - the new due date.
+
+Available Modification Properties
+
+* `name` - the new task name
+* `notes` - the new task notes. If the first character in notes is `&` these will be appended to the current task notes.
+* `assignee` - the user ID or 'me' the task should be assigned to.
+* `due_on` - the new due date.
 	
-###Output
+### Output
 None if successful. Error message if not.
 
-###Example Input
+### Example Input
 ```
 {
 	"modifications": { 
@@ -404,14 +443,15 @@ None if successful. Error message if not.
 ## <a name="commentTask"></a>Comment On Task
 Add a comment to an existing task.
 
-###Input
+### Input
 `taskID` - Required. The ID of the task to comment on.
+
 `comment`- Required. A string containing the comment to add.
 
-###Output
+### Output
 The comment ID.
 
-###Example Input
+### Example Input
 ```
 {
 	"taskID": "490764297621893",
@@ -419,5 +459,5 @@ The comment ID.
 }
 ```
 
-###Example Output
+### Example Output
 `123456789`
