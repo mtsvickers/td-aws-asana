@@ -2,29 +2,19 @@
 Lambda functions which make calls to the Asana API to run various tasks such as updating tasks, adding tasks, and retrieving information from a workspace.
 
 ## Table Of Contents
-[Argument Key](#argkey) - a list of available argument symbols
-
-[Parse Request](#parseRequest) - parses a string of arguments into an object of argumentName:argumentValue
-
-[Find Tasks](#findTasks) - returns data on all tasks matching given filtering parameters
-
-[Get Task by id](#getTask) - get data about specific task by task id.
-
-[Convert Names to IDs](#convertNames) - takes an object and replaces certain named properties with their IDs based on a typeahead search.
-
-[Get ID by Name](#getID) - takes a single string name and a type (project, tag, etc) and returns the id based on a typeahead search
-
-[Add Task](#addTask) - adds a new Asana task based on given parameters
-
-[Update Task](#updateTask) - updates a task based on a given task ID and update parameters
-
-[Comment On Task](#commentTask) - adds a given comment to the task with the given ID
+[Argument Key](#argkey) - a list of available argument symbols<br/>
+[Parse Request](#parseRequest) - parses a string of arguments into an object of argumentName:argumentValue<br/>
+[Find Tasks](#findTasks) - returns data on all tasks matching given filtering parameters<br/>
+[Get Task by id](#getTask) - get data about specific task by task id.<br/>
+[Convert Names to IDs](#convertNames) - takes an object and replaces certain named properties with their IDs based on a typeahead search.<br/>
+[Get ID by Name](#getID) - takes a single string name and a type (project, tag, etc) and returns the id based on a typeahead search<br/>
+[Add Task](#addTask) - adds a new Asana task based on given parameters<br/>
+[Update Task](#updateTask) - updates a task based on a given task ID and update parameters<br/>
+[Comment On Task](#commentTask) - adds a given comment to the task with the given ID<br/>
 
 ## <a name="argkey"></a>Argument Key
 These are all of the available argument symbols used by these functions.
-
 Not all of the arguments are available on all functions.
-
 Please see the function documentation to view the arguments available to that function.
 
 ```
@@ -45,16 +35,12 @@ $ = Modified Since
 
 ## <a name="parseRequest"></a>Parse Request
 parses a string of arguments into an object of argumentName:argumentValue
-
 This function will parse all symbol arguments listed above.
-
 If the first element in the string is not prefixed with a symbol, it is assumed to be the task ID or name.
 
 ### Input Parameters
 string `data` - the string containing the arguments to be parsed.
-
 string `mode` - the mode to run this function in.
-
 Allowed Modes:
 * `AddTask`
 * `GetTask`
@@ -137,18 +123,14 @@ Object `request` containing properties which represent the parameters which limi
 
 #### Avalable Properties
 If you specify project or tag you must NOT specify workspace or assignee.
-
 If no arguments are provided this will return all tasks in the default workspace assigned to the API token's user.
 
-`completed_since` - Returns incomplete tasks or tasks completed since the given time.
-
+`completed_since` - Returns incomplete tasks or tasks completed since the given time.<br/>
 `modified_since` - Returns tasks modified since this date.
-
 
  AND
  
-`workspace` - The workspace ID
-
+`workspace` - The workspace ID<br/>
 `assignee` - The Assignee's ID or 'me' for the API user, which is the default.
 
 OR
@@ -187,10 +169,8 @@ an array of the IDs and names of the tasks found based on the filters.
 return all or some information about a task based on a given task ID
 
 ### Input
-`taskID` - Required. The ID of the task to get information about.
-
-`opt_fields` - Optional. An array of fields to return. Default is all of them
-
+`taskID` - Required. The ID of the task to get information about.<br/>
+`opt_fields` - Optional. An array of fields to return. Default is all of them<br/>
 Available `opt_field` args:
 * `id`
 * `name`
@@ -227,7 +207,6 @@ An Object with the task information requested (or all information by default)
 
 ## <a name="convertNames"></a>Convert Names To IDs
 searches for named properties in event.request and event.modifications which Asana will want as IDs in other functions
-
 does a typeahead search on each of these properties and replaces the names with the corresponding IDs in the original input object
 
 ### Input
@@ -310,12 +289,10 @@ The input object with any of the properties above which contained names replaced
 Takes at minimum a name string and does a typeahead search to find the matching ID
 
 ### Input
-`data` - Required. String. The Name of the element to find.
-
+`data` - Required. String. The Name of the element to find.<br/>
 `type` - Optional. String. The type of element to find. Default is 'project'
 
 Allowed Type Values:
-
 * `project`
 * `tag`
 * `task`
@@ -390,14 +367,11 @@ The task ID
 Updates an existing task based on the given parameters.
 
 ### Input
-`taskID` - Required. The ID of the task to update
-
-`taskInfo` - Optional. An object containing the current task information. Needed if you want to append to notes.
-
+`taskID` - Required. The ID of the task to update<br/>
+`taskInfo` - Optional. An object containing the current task information. Needed if you want to append to notes.<br/>
 `modifications` - Required. At least one of the modifications properties must be set and non-empty.
 
 Available Modification Properties
-
 * `name` - the new task name
 * `notes` - the new task notes. If the first character in notes is `&` these will be appended to the current task notes.
 * `assignee` - the user ID or 'me' the task should be assigned to.
@@ -444,8 +418,7 @@ None if successful. Error message if not.
 Add a comment to an existing task.
 
 ### Input
-`taskID` - Required. The ID of the task to comment on.
-
+`taskID` - Required. The ID of the task to comment on.<br/>
 `comment`- Required. A string containing the comment to add.
 
 ### Output
