@@ -1,16 +1,19 @@
 {
-	"request": {
-		"name": "All Options",
-	    "memberships": [
-		    {
-		    "project": "490764297621890",
-			"section": "490764297621898"
-			}
-	    ],
-	    "project": [],
-		"tag": [ "490864456721252", "490864456721253" ],
-	    "parent": "490764297621891",
-	    "due_on": "2018-12-25",
-	    "notes": "This is a dummy task which we are testing to try to create with lots of options."	
-	} 
+    "request": {
+        "name": "All Options",
+        "memberships": [
+            {
+                "project": "490764297621890",
+                "section": "490764297621898"
+            }
+        ],
+
+        "tags": [
+            "490864456721252",
+            "490864456721253"
+        ],
+        "parent": "490764297621891",
+        "due_on": "2018-12-25",
+        "notes": "This is a dummy task which we are testing to try to create with lots of options."
+    }
 }

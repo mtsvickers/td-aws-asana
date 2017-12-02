@@ -30,7 +30,11 @@ functions:
     handler: handlers.addTask
   updateAsanaTask:
     handler: handlers.updateTask
-  findProjectTag:
-    handler: handlers.findProjectTag
+  getIDbyName:
+    handler: handlers.getIDbyName
   commentOnTask:
     handler: handlers.commentOnTask
+  iterateTasks:
+    handler: handlers.iterateTasks
+  checkInboxTaskStatus:
+    handler: checkInboxTaskStatus

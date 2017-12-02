@@ -27,18 +27,13 @@ module.exports = (event, context, callback) => {
 	}
 	
 	//Try to get the tasks and return the response.
-	console.log(getTaskMeta);
 	client.tasks.findAll(getTaskMeta)
 	.then(function(response) {
-		
-		console.log(response.data);
 		callback(null, response.data);
-		
 	})
 	.catch(function(error) {
         var error = new Error(error);
 		callback(error);
-		return false;
     });
 			
 };

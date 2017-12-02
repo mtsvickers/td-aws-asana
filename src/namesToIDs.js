@@ -16,16 +16,10 @@ module.exports = (event, context, callback) => {
 	var inputObject = event;
 	var mode = event.mode;
 	
-	var argsWithIDs = ["name", "project", "section", "tag","assignee","followers", "parent", "memberships"];
-	var lookupTypes = ["task", "project", "section", "tag", "user", "user", "task", "project"]
+	var argsWithIDs = ["id", "name", "project", "section", "tag","assignee","followers", "parent", "memberships"];
+	var lookupTypes = ["task", "task", "project", "section", "tag", "user", "user", "task", "project"]
 	var workspace = process.env.TD_DEFAULT_WORKSPACE;
 	if( event.request.workspace ) { event.request.workspace; }
-	
-	//if this is in addTask mode, skip name, since it will be new and not have an id.
-	if( mode == "addTask" ) {
-		argsWithIDs.splice(0,1);
-		lookupTypes.splice(0,1);
-	}
 	
 	//Save any objects in events we want to look through.
 	var childObjects = [

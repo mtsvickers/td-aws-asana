@@ -1,3 +1,4 @@
 {
-	"data": "AddTask All Options +490764297621890:490764297621898 @490864456721252,490864456721253 ^490764297621891 #2018-12-25 ~This is a dummy task which we are testing to try to create with lots of options."
+	"data": "All Options +490764297621890:490764297621898 @490864456721252 @490864456721253 ^490764297621891 #2018-12-25 ~This is a dummy task which we are testing to try to create with lots of options.",
+	"mode": "AddTask"
 }

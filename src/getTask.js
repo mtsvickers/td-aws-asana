@@ -21,7 +21,6 @@ module.exports = (event, context, callback) => {
 			var field = returnFields[i];
 			returnObj[field] = response[field];
 		}
-		console.log(returnObj);
 		callback(null, returnObj);
 	})
 	.catch(function(error) {

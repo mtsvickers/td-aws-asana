@@ -1,5 +1,5 @@
 {
 	"mode": "GetTask",
-	"request": { "id": "490979385512957", "opt_fields": [ "name", "due_date" ] },
+	"request": { "id": "490979385512957" },
 	"taskID": "490979385512957" 
 }

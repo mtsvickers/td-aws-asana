@@ -1,3 +1,4 @@
 {
-	"data": "GetTask 490764297621893 |name,due_on,assignee,notes"
+	"data": "490764297621893 |name,due_on,assignee,notes",
+	"mode": "GetTask"
 }
