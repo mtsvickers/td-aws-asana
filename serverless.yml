@@ -44,3 +44,7 @@ functions:
     handler: handlers.iterateTasks
   checkTaskStatus:
     handler: handlers.checkTaskStatus
+  addTaskFollowers:
+    handler: handlers.addFollowers
+  addTaskToProjects:
+    handler: handlers.addTaskToProjects

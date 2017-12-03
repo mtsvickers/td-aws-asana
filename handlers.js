@@ -7,4 +7,6 @@ module.exports.namesToIDs = require('./src/namesToIDs');
 module.exports.getIDbyName = require('./src/getIDbyName');
 module.exports.commentOnTask = require('./src/commentOnTask');
 module.exports.iterateTasks = require('./src/iterateTasks');
-module.exports.checkTaskStatus= require('./src/checkTaskStatus');
+module.exports.checkTaskStatus= require('./src/checkTaskStatus'); 
+module.exports.addFollowers= require('./src/addFollowers');
+module.exports.addTaskToProjects= require('./src/addTaskToProject');
