@@ -42,5 +42,5 @@ functions:
     handler: handlers.commentOnTask
   iterateTasks:
     handler: handlers.iterateTasks
-  checkInboxTaskStatus:
-    handler: checkInboxTaskStatus
+  checkTaskStatus:
+    handler: handlers.checkTaskStatus

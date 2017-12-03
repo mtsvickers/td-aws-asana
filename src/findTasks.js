@@ -26,6 +26,8 @@ module.exports = (event, context, callback) => {
 		
 	}
 	
+	console.log(getTaskMeta);
+	
 	//Try to get the tasks and return the response.
 	client.tasks.findAll(getTaskMeta)
 	.then(function(response) {

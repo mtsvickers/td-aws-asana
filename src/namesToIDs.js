@@ -19,12 +19,13 @@ module.exports = (event, context, callback) => {
 	var argsWithIDs = ["id", "name", "project", "section", "tag","assignee","followers", "parent", "memberships"];
 	var lookupTypes = ["task", "task", "project", "section", "tag", "user", "user", "task", "project"]
 	var workspace = process.env.TD_DEFAULT_WORKSPACE;
-	if( event.request.workspace ) { event.request.workspace; }
+	if( event.request && event.request.workspace ) { event.request.workspace; }
 	
 	//Save any objects in events we want to look through.
-	var childObjects = [
-		{ obj: event.request, path: "request" }
-	];
+	var childObjects = [];
+	if( event.request ) {
+		childObjects.push( { obj: event.request, path: "request" } );
+	}
 	if( event.modifications ) {
 		childObjects.push( { obj: event.modifications, path: "modifications" } );
 	}

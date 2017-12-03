@@ -22,7 +22,7 @@ module.exports = (event, context, callback) => {
 		var argNames = [ "project", "tag", "due_on", "assignee", "followers", "completed_since", "modified_since", "parent", "workspace", "notes", "opt_fields"];
 		
 		//Pluralize if we're going to need arrays
-		if( mode === "AddTask" || mode === "UpdateTask" ) {
+		if( mode === "AddTask" || mode === "UpdateTask" || mode === "UpdateTaskWithID" ) {
 			argNames[0] = "projects";
 			argNames[1] = "tags"
 		}
@@ -37,7 +37,7 @@ module.exports = (event, context, callback) => {
 		var contentType = "id";
 		if( symbolIndex >= 0 ) {
 			contentType = argNames[symbolIndex];
-		} else if ( mode === "AddTask") {
+		} else if ( mode === "AddTask" || mode === "UpdateTaskWithID") {
 			contentType = "name";
 		}
 		
@@ -158,7 +158,7 @@ module.exports = (event, context, callback) => {
 		
 		const dataString = event.data.trim();
 		const mode = event.mode;
-		var formattedRequest = {};
+		var formattedRequest = event;
 			
 		//If we have data to parse, let's do that.
 		if( dataString.length > 0 ) {
@@ -182,15 +182,21 @@ module.exports = (event, context, callback) => {
 			
 			parsedData = parseArguments( dataString, mode );
 			if( parsedData ) {
-				formattedRequest.request = parsedData;
+				if( mode === "UpdateTaskWithID" && ! formattedRequest.modifications ) {
+					//if we had an id, we probably didn't use a % because everything is likely a modification. Just store this in mod.
+					formattedRequest.modifications = parsedData;
+				} 
+				else {
+					formattedRequest.request = parsedData;
+				}
 			}
 			
 			//Task IDs are used often. If we have that, let's store it higher up in the object hierarchy to make it easy to access.
-			if( formattedRequest.request.id ) {
+			if( formattedRequest.request && ! event.taskID && formattedRequest.request.id ) {
 				formattedRequest.taskID = formattedRequest.request.id;
 			}
 				
-		} //If we had data to parse.
+		} //If we had data to parse.		
 		
 		callback(null, formattedRequest);
 

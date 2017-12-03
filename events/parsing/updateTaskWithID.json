@@ -1,5 +1,4 @@
 {
-	"iteration": {
     "execute": true,
     "mode": "UpdateTaskWithID",
     "index": 0,
@@ -21,12 +20,5 @@
       "notes": ""
     },
     "needsUpdating": true,
-    "data": "New task Test #04-25-2018 ~These are notes I want in the task. >me",
-    "modifications": {
-      "id": "New task Test",
-      "due_on": "04-25-2018",
-      "notes": "These are notes I want in the task.",
-      "assignee": "me"
-    }
-  }
-}
+    "data": "New task Test #04-25-2018 ~These are notes I want in the task. >me"
+ }

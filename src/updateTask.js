@@ -14,19 +14,19 @@ module.exports = (event, context, callback) => {
 		callback(error);
 	}
 	else {
-				
-		//Lets make sure we're actually sending some changes
-		var hasChanges = false;
 		if( event.modifications ) {
-			mods = event.modifications;
-			if( mods.assignee || mods.notes || mods.due_date || mods.name ) { hasChanges = true; }
-		}
-		
-		if( ! hasChanges ) {
-			var error = new Error("No valid changes were requested.");
-			callback(error);
-		}
-		else {
+			
+			var mods = {};
+			
+			//Loop through allowed mods and set values for any we have in the mods object.
+			var allowedMods = ["assignee", "notes", "due_on", "name"];
+			for( var i = 0; i < allowedMods.length; i++ ) {
+				var modType = allowedMods[i];
+				if( event.modifications[modType] ) {
+					mods[modType] = event.modifications[modType]
+				}
+				
+			}			
 			
 			//If we are appending notes and we have the current task notes, let's update our notes var to reflect that.
 			if( mods.notes && mods.notes.charAt(0) === "&" && event.taskInfo && event.taskInfo.notes ) {
@@ -43,8 +43,11 @@ module.exports = (event, context, callback) => {
 		        var error = new Error(error);
 				callback(error);
 		    });
-			
-		} //We have changes to make.
+		}
+		else {
+			//no changes requested.
+			callback( null );
+		}
 		
 	} //we have what looks like a valid task id
 	

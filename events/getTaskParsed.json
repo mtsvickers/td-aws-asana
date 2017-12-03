@@ -1,5 +1,6 @@
 {
-	"mode": "GetTask",
-	"request": { "id": "490979385512957" },
-	"taskID": "490979385512957" 
+	"execute": true,
+	"mode": "UpdateTaskWithID",
+	"index": 0,
+	"taskID": 493495796187752
 }

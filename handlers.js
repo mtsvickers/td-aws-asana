@@ -7,4 +7,4 @@ module.exports.namesToIDs = require('./src/namesToIDs');
 module.exports.getIDbyName = require('./src/getIDbyName');
 module.exports.commentOnTask = require('./src/commentOnTask');
 module.exports.iterateTasks = require('./src/iterateTasks');
-module.exports.checkInboxTaskStatus = require('./src/checkInboxTaskStatus');
+module.exports.checkTaskStatus= require('./src/checkTaskStatus');

@@ -1,0 +1,23 @@
+{
+"iteration": {
+	"execute": "true",
+	"mode": "UpdateTaskWithID",
+	"index": "0",
+	"taskID": "493495796187752",
+	"taskInfo": {
+	  "id": "493495796187752",
+	  "name": "New task Test #04-25-2018 ~These are notes I want in the task. >me",
+	  "projects": [],
+	  "assignee": {
+	    "id": "32140157319985",
+	    "name": "Marissa Solomon"
+	  },
+	  "assignee_status": "inbox",
+	  "created_at": "2017-12-02T23:18:27.957Z",
+	  "completed_at": "null",
+	  "completed": "false",
+	  "due_on": "null",
+	  "due_at": "null",
+	  "notes": ""
+	}
+}}

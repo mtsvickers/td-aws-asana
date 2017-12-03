@@ -1,16 +1,15 @@
 module.exports = (event, context, callback) => {
 	
 	var eventObj = event;
-	eventObj.iteration.needsUpdating = false;
-	eventObj.mode = "UpdateTask";
+	eventObj.needsUpdating = false;
 	
-	//Make sure we have tasks to work with
-	if( ! event.taskInfo || event.checkInboxTaskStatus.length <= 0 ) {
-		callback(null, i);
+	//Make sure we have a task to work with
+	if( ! event.taskInfo || event.taskInfo.length <= 0 ) {
+		callback(null, eventObj);
 	} else {
 		
 		//See if the task needs updating
-		const info = event.taskInfo;
+		const info = eventObj.taskInfo;
 		if( info.assignee_status !== "inbox" ) {
 			//not in the inbox. Skip.
 			callback(null, eventObj);
@@ -19,8 +18,14 @@ module.exports = (event, context, callback) => {
 			//this has already been put in a project or tag, so it's probably not a dynamically created task. Skip it.
 			callback(null, eventObj);
 		}
+		else if( ! info.name || info.name.length <= 0 ) {
+			//no valid task name. Skip.
+			callback(null, eventObj);
+		}
 		else {
-			i.needsUpdating = true;
+			eventObj.needsUpdating = true;
+			eventObj.data = info.name;
+			
 			callback(null, eventObj);
 		}
 	}

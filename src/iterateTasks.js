@@ -1,27 +1,27 @@
 module.exports = (event, context, callback) => {
 	
+	var iteration = {
+		execute: false,
+		mode: "UpdateTaskWithID"
+	};
+	
 	//Make sure we have tasks to work with
-	if( ! event.foundTasks || event.foundTasks.length <= 0 || ! event.iteration.index ) {
-		callback(null, "No Tasks to Update");
+	if( ! event.foundTasks || event.foundTasks.length <= 0 || ! event.iteration || ! event.iteration.index ) {
+		callback(null, iteration);
 	} else {
 		
-		var iteration = event.iteration.index;
-		iteration++;
+		var index = event.iteration.index;
+		index++;
 		
-		if( event.iteration < event.foundTasks.length ) {
+		if( index < event.foundTasks.length ) {
+			iteration.index = index;
+			iteration.execute = true;
+			iteration.taskID = event.foundTasks[index].id;
 			
-			var result = {
-				index: iteration,
-				execute: true,
-				taskID: event.foundTasks[iteration].id
-			};
 			
-			callback(null, result);
+			callback(null, iteration);
 		}else {
-			var result = {
-				execute: false
-			};
-			callback(null, result);
+			callback(null, iteration);
 		}
 		
 	}
