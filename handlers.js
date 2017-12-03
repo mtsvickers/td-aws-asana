@@ -10,3 +10,4 @@ module.exports.iterateTasks = require('./src/iterateTasks');
 module.exports.checkTaskStatus= require('./src/checkTaskStatus'); 
 module.exports.addFollowers= require('./src/addFollowers');
 module.exports.addTaskToProjects= require('./src/addTaskToProject');
+module.exports.addTaskTags= require('./src/addTaskTags');

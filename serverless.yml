@@ -48,3 +48,5 @@ functions:
     handler: handlers.addFollowers
   addTaskToProjects:
     handler: handlers.addTaskToProjects
+  addTaskTags:
+    handler: handlers.addTaskTags
