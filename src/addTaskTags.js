@@ -15,10 +15,11 @@ module.exports = (event, context, callback) => {
 	}
 	else {
 		if( event.modifications && event.modifications.tags && event.modifications.tags.length > 0 ) {
+			var tags = event.modifications.tags;
 			
 			//for each tag in the array, add the task to that.
 			var Promise = require('bluebird');
-			Promise.all(instances.map(function(instance) {
+			Promise.all(tags.map(function(instance) {
 				
 				var data = { tag: instance };
 				

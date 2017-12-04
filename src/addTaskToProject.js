@@ -30,7 +30,7 @@ module.exports = (event, context, callback) => {
 			
 			//for each element in the array, add the task to that.
 			var Promise = require('bluebird');
-			Promise.all(instances.map(function(instance) {
+			Promise.all(projects.map(function(instance) {
 				
 				return client.tasks.addProject(taskID, instance)
 				.then(function(response) {
