@@ -4,7 +4,7 @@ module.exports = (event, context, callback) => {
 	eventObj.needsUpdating = false;
 	
 	//Make sure we have a task to work with
-	if( ! event.hasOwnProperty('taskInfo') || event.taskInfo.hasOwnProperty('assignee_status') ) {
+	if( ! event.hasOwnProperty('taskInfo') || ! event.taskInfo.hasOwnProperty('assignee_status') ) {
 		eventObj.errorMsg = "no task info or assignee status";
 		callback(null, eventObj);
 	} else {
