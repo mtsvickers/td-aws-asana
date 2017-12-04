@@ -43,7 +43,7 @@
       "Type": "Task",
       "Resource": "arn:aws:lambda:us-west-2:972085233183:function:td-aws-asana-dev-getAsanaTask",
       "InputPath": "$.iteration",
-      "ResultPath": "$.iteration.taskInfo",
+      "ResultPath": "$.iteration",
       "Next": "Check Task Status"
     },
     "Check Task Status": {
@@ -81,36 +81,34 @@
       "Type": "Task",
       "Resource": "arn:aws:lambda:us-west-2:972085233183:function:td-aws-asana-dev-updateAsanaTask",
       "InputPath": "$.iteration",
-      "ResultPath": "$.iteration.result",
+      "ResultPath": "$.iteration",
       "Next": "Add Task to Project(s)"
     },
     "Add Task to Project(s)": {
       "Type": "Task",
       "Resource": "arn:aws:lambda:us-west-2:972085233183:function:td-aws-asana-dev-addTaskToProjects",
       "InputPath": "$.iteration",
-      "ResultPath": "$.iteration.result",
+      "ResultPath": "$.iteration",
       "Next": "Add Task to Tag(s)"
     },
     "Add Task to Tag(s)": {
       "Type": "Task",
       "Resource": "arn:aws:lambda:us-west-2:972085233183:function:td-aws-asana-dev-addTaskTags",
       "InputPath": "$.iteration",
-      "ResultPath": "$.iteration.result",
+      "ResultPath": "$.iteration",
       "Next": "Add Task Followers"
     },
     "Add Task Followers": {
       "Type": "Task",
       "Resource": "arn:aws:lambda:us-west-2:972085233183:function:td-aws-asana-dev-addTaskFollowers",
       "InputPath": "$.iteration",
-      "ResultPath": "$.iteration.result",
+      "ResultPath": "$.iteration",
       "Next": "Iterate Tasks"
     },
     
-    "Finished Execution": {
-      "Type": "Pass",
-      "Result": {
-        "result": "Finished Execution"
-      },
+    "Finished Execution, Handle Errors": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:us-west-2:972085233183:function:td-aws-asana-dev-handleIterativeErrors",
       "ResultPath": "$.result",
       "End": true
     }

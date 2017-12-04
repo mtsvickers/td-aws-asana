@@ -19,7 +19,7 @@ module.exports = (event, context, callback) => {
 	var argsWithIDs = ["id", "name", "project", "projects", "section", "tag", "tags", "assignee","followers", "parent", "memberships"];
 	var lookupTypes = ["task", "task", "project", "project", "section", "tag", "tag", "user", "user", "task", "project"]
 	var workspace = process.env.TD_DEFAULT_WORKSPACE;
-	if( event.request && event.request.workspace ) { event.request.workspace; }
+	if( event.hasOwnProperty('request') && event.request.hasOwnProperty('workspace') ) { workspace = event.request.workspace; }
 	
 	//Save any objects in events we want to look through.
 	var childObjects = [];
@@ -170,8 +170,13 @@ module.exports = (event, context, callback) => {
 		callback(null, inputObject);
 	})
 	.catch(function(error) {
-        var error = new Error(error);
-		callback(error);
+		var errorReport = "\n Could not get ids from names for task "+taskID+"\n"+error;
+		if( inputObject.hasOwnProperty('errorReport') ) {
+			inputObject.errorReport += errorReport;
+		} else {
+			inputObject.errorReport = errorReport;
+		}
+		callback(null, inputObject);
     });
 	
 };

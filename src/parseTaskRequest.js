@@ -17,9 +17,9 @@ module.exports = (event, context, callback) => {
 	 *
 	 * @param string argString - the string of arguments to parse.
 	 */
-	function parseArguments( argString, mode ) {
-		var symbols = [ "+", "#", "*", "@", "<", "!", "$", "^", "*", "~", "|" ];
-		var argNames = [ "project", "tag", "due_on", "assignee", "followers", "completed_since", "modified_since", "parent", "workspace", "notes", "opt_fields"];
+	function parseArguments( args, mode ) {
+		var symbols = [ " +", " #", " !", " @", " <", " $", " ^", " *", " ~", " |" ];
+		var argNames = [ "project", "tag", "due_on", "assignee", "followers", "modified_since", "parent", "workspace", "notes", "opt_fields"];
 		
 		//Pluralize if we're going to need arrays
 		if( mode === "AddTask" || mode === "UpdateTask" || mode === "UpdateTaskWithID" ) {
@@ -32,11 +32,13 @@ module.exports = (event, context, callback) => {
 		var offset = 0;
 		
 		//See if we are starting with an identifier or an argument.
-		var firstChar = argString.charAt(0);
+		var argString = args;
+		var firstChar = " "+args.charAt(0);
 		var symbolIndex = symbols.indexOf(firstChar);
 		var contentType = "id";
 		if( symbolIndex >= 0 ) {
 			contentType = argNames[symbolIndex];
+			argString = " "+argString; //add a leading space for consistency.
 		} else if ( mode === "AddTask" || mode === "UpdateTaskWithID") {
 			contentType = "name";
 		}
@@ -47,7 +49,7 @@ module.exports = (event, context, callback) => {
 			var nextContentType = "";
 			
 			//if this isn't an identifier, don't count the current symbol in the offset.
-			if( contentType != "id" && contentType != "name" ) { offset++; }
+			if( contentType != "id" && contentType != "name" ) { offset += 2; }
 			
 			//Find the next argument so we know where this one ends.
 			var nextIndex = argString.length;
@@ -144,9 +146,15 @@ module.exports = (event, context, callback) => {
 	**************/
 	
 	//If we weren't sent any data, throw an error.
+	var formattedRequest = event;
 	if( ! event.hasOwnProperty('data') || event.data.length <= 0 ) {
-		var error = new Error("No Data provided");
-		callback(error);
+		var errorReport = "\n No Data Provided for task "+taskID+"\n"+error;
+			if( formattedRequest.hasOwnProperty('errorReport') ) {
+				formattedRequest.errorReport += errorReport;
+			} else {
+				formattedRequest.errorReport = errorReport;
+			}
+			callback(null, formattedRequest);
 	}
 	else if( ! event.hasOwnProperty('mode') ) {
 		var error = new Error("No Mode provided");
@@ -154,9 +162,8 @@ module.exports = (event, context, callback) => {
 	}
 	else {
 		
-		const dataString = event.data.trim();
+		var dataString = event.data.trim();
 		const mode = event.mode;
-		var formattedRequest = event;
 			
 		//If we have data to parse, let's do that.
 		if( dataString.length > 0 ) {

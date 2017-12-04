@@ -6,16 +6,22 @@ const client = asana.Client.create().useAccessToken(process.env.TD_ASANA_ACCESS_
 module.exports = (event, context, callback) => {
 
 	if( ! event.hasOwnProperty('taskID') ) {
-		callback(null);
+		callback(null, event);
 	} else {
 		
+		var iteration = event;
 		const taskID = event.taskID;
 		var mods = {};
 		
 		
 		if( isNaN( taskID ) ) {
-			var error = new Error("Invalid task identifier: '"+taskID+'.');
-			callback(error);
+			var errorReport = "\n Could not get ID for task: "+taskID;
+			if( iteration.hasOwnProperty('errorReport') ) {
+				iteration.errorReport += errorReport;
+			} else {
+				iteration.errorReport = errorReport;
+			}
+			callback(null, iteration);
 		}
 		else {
 			if( event.hasOwnProperty('modifications') ) {
@@ -38,16 +44,28 @@ module.exports = (event, context, callback) => {
 				
 				client.tasks.update(taskID, mods)
 				.then(function(response) {
-					callback(null, response.id);
+					iteration.result = response.id;
+					callback(null, iteration);
 				})
 				.catch(function(error) {
-			        var error = new Error(error);
-					callback(error);
+			        var errorReport = "\n Could not Update Task: ";
+			        if( iteration.hasOwnProperty('taskInfo') && iteration.taskInfo.hasOwnProperty('name') ) {
+				        errorReport += iteration.taskInfo.name+"\n"+error;
+				    } else {
+					    errorReport += iteration.taskID+"\n"+error;
+				    }
+				    
+					if( iteration.hasOwnProperty('errorReport') ) {
+						iteration.errorReport += errorReport;
+					} else {
+						iteration.errorReport = errorReport;
+					}
+					callback(null, iteration);
 			    });
 			}
 			else {
 				//no changes requested.
-				callback( null );
+				callback( null, iteration );
 			}
 			
 		} //we have what looks like a valid task id

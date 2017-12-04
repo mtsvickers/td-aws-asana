@@ -4,12 +4,15 @@ const asana = require('asana');
 const client = asana.Client.create().useAccessToken(process.env.TD_ASANA_ACCESS_TOKEN);
 
 module.exports = (event, context, callback) => {
-	if( ! event.hasOwnProperty('taskID') ) {
+	
+	var iteration = event;
+	
+	if( ! iteration.hasOwnProperty('taskID') ) {
 		callback(null);
 	} else {
-		const taskID = event.taskID;
+		const taskID = iteration.taskID;
 		var returnFields = ['id','name','projects','assignee','assignee_status','created_at','completed_at','completed','due_on','due_at','notes'];
-		if( event.hasOwnProperty('request') && event.request.hasOwnProperty('opt_fields') && ( event.request.opt_fields.length > 0 ) ) {
+		if( iteration.hasOwnProperty('request') && iteration.request.hasOwnProperty('opt_fields') && ( iteration.request.opt_fields.length > 0 ) ) {
 			returnFields = event.request.opt_fields;
 		}
 		
@@ -22,11 +25,18 @@ module.exports = (event, context, callback) => {
 				var field = returnFields[i];
 				returnObj[field] = response[field];
 			}
-			callback(null, returnObj);
+			iteration.taskInfo = returnObj;
+			callback(null, iteration);
 		})
 		.catch(function(error) {
-	        var error = new Error(error);
-			callback(error);
+			var errorReport = "\n Could not get task information for task "+taskID+"\n"+error;
+			if( iteration.hasOwnProperty('errorReport') ) {
+				iteration.errorReport += errorReport;
+			} else {
+				iteration.errorReport = errorReport;
+			}
+			callback(null, iteration);
 	    });
 	}
+	
 }; //end module.exports

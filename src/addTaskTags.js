@@ -4,18 +4,22 @@ const asana = require('asana');
 const client = asana.Client.create().useAccessToken(process.env.TD_ASANA_ACCESS_TOKEN);
 
 module.exports = (event, context, callback) => {
+	
+	var iteration = event;
+	
+	if( ! iteration.hasOwnProperty('taskID') || isNaN( taskID ) ) {
+		callback(null, iteration);
+	} else {
+		const taskID = iteration.taskID;
+		var mods = {};
 
-	const taskID = event.taskID;
-	var mods = {};
-	
-	
-	if( ! taskID || isNaN( taskID ) ) {
-		var error = new Error("Invalid task identifier: '"+taskID+'.');
-		callback(error);
-	}
-	else {
-		if( event.hasOwnProperty('modifications') && event.modifications.hasOwnProperty('tags') && event.modifications.tags.length > 0 ) {
-			var tags = event.modifications.tags;
+		if( iteration.hasOwnProperty('modifications') && iteration.modifications.hasOwnProperty('tags') && iteration.modifications.tags.length > 0 ) {
+			
+			var tags = iteration.modifications.tags;
+			var tName = taskID;
+			if( iteration.hasOwnProperty('taskInfo') && iteration.taskInfo.hasOwnProperty('name') ) {
+				tName = iteration.taskInfo.name;	
+			}
 			
 			//for each tag in the array, add the task to that.
 			var Promise = require('bluebird');
@@ -28,25 +32,36 @@ module.exports = (event, context, callback) => {
 					return;
 				})
 				.catch(function(error) {
-			        console.log(error);
+			        var errorReport = "\n Could not add task "+tName+" to Tag "+instance+"\n"+error;
+					if( iteration.hasOwnProperty('errorReport') ) {
+						iteration.errorReport += errorReport;
+					} else {
+						iteration.errorReport = errorReport;
+					}
+					callback(null, iteration);
 					return;
 			    });
 				
 			}))
 			.then(function(response) {
-				callback(null);
+				callback(null, iteration);
 			})
 			.catch(function(error) {
-		        console.log(error);
-				callback(null);
+				var errorReport = "\n An error occurred attempting to add tags to "+tName+"\n"+error;
+				if( iteration.hasOwnProperty('errorReport') ) {
+					iteration.errorReport += errorReport;
+				} else {
+					iteration.errorReport = errorReport;
+				}
+				callback(null, iteration);
 		    });
 			
 		}
 		else {
 			//no changes requested.
-			callback( null );
+			callback( null, iteration );
 		}
-		
-	} //we have what looks like a valid task id
+			
+	}
 	
 }; //end module.exports

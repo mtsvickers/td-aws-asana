@@ -5,33 +5,41 @@ const client = asana.Client.create().useAccessToken(process.env.TD_ASANA_ACCESS_
 
 module.exports = (event, context, callback) => {
 
-	const taskID = event.taskID;
-	var mods = {};
+	var iteration = event;
 	
-	
-	if( ! taskID || isNaN( taskID ) ) {
-		var error = new Error("Invalid task identifier: '"+taskID+'.');
-		callback(error);
-	}
-	else {
-		if( event.hasOwnProperty('modifications') && event.modifications.hasOwnProperty('followers') && event.modifications.followers.length > 0 ) {
+	if( ! iteration.hasOwnProperty('taskID') || isNaN( taskID ) ) {
+		callback(null, iteration);
+	} else {
+		
+		const taskID = iteration.taskID;
+		var mods = {};
+
+		if( iteration.hasOwnProperty('modifications') && iteration.modifications.hasOwnProperty('followers') && iteration.modifications.followers.length > 0 ) {
 			
-			var data = { followers: event.modifications.followers };
+			var data = { followers: iteration.modifications.followers };
+			var tName = taskID;
+			if( iteration.hasOwnProperty('taskInfo') && iteration.taskInfo.hasOwnProperty('name') ) {
+				tName = iteration.taskInfo.name;	
+			}
 			
 			client.tasks.addFollowers(taskID, data)
 			.then(function(response) {
-				console.log(response);
-				callback(null, response.id);
+				callback(null, iteration);
 			})
 			.catch(function(error) {
-		        var error = new Error(error);
-				callback(error);
+		        var errorReport = "\n An error occurred attempting to add followers to "+tName+"\n"+error;
+				if( iteration.hasOwnProperty('errorReport') ) {
+					iteration.errorReport += errorReport;
+				} else {
+					iteration.errorReport = errorReport;
+				}
+				callback(null, iteration);
 		    });
 			
 		}
 		else {
 			//no changes requested.
-			callback( null );
+			callback( null, iteration );
 		}
 		
 	} //we have what looks like a valid task id

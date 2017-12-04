@@ -25,10 +25,9 @@ Please see the function documentation to view the arguments available to that fu
 + = Projects
 : = Section
 # = Tags
-* = Due Date
+! = Due Date
 @ = Assignee
 < = Followers
-! = Completed Since
 $ = Modified Since
 ^ = Parent
 * = Workspace  
@@ -59,7 +58,7 @@ Object containing the parsed data as properties.
 #### INPUT
 ```
 {
-	"data": "New Task Name +Project Name:Section Name #tag1,tag2 ^Parent Task *2018-12-25 ~This makes a new task and these will be the notes. @me"
+	"data": "New Task Name +Project Name:Section Name #tag1,tag2 ^Parent Task !2018-12-25 ~This makes a new task and these will be the notes. @me"
 }
 ```
 #### OUTPUT
@@ -86,7 +85,7 @@ Object containing the parsed data as properties.
 #### INPUT
 ```
 {
-	"data": "UpdateTask My Current Task Name % New Task Name ~&These are notes I want to append to my task. *2017-12-25"
+	"data": "UpdateTask My Current Task Name % New Task Name ~&These are notes I want to append to my task. !2017-12-25"
 }
 ```
 #### OUTPUT

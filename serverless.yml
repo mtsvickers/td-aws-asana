@@ -9,7 +9,7 @@ provider:
   runtime: nodejs6.10
   region: us-west-2
   versionFunctions: false
-  profile: asanalive
+  profile: asanatest
   memorySize: 256
   environment:
   REGION: ${opt:region, self:provider.region}
@@ -52,3 +52,5 @@ functions:
     handler: handlers.addTaskTags
   setModifiedDate:
     handler: handlers.setModifiedDate
+  handleIterativeErrors:
+    handler: handlers.handleIterativeErrors

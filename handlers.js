@@ -12,3 +12,4 @@ module.exports.addFollowers= require('./src/addFollowers');
 module.exports.addTaskToProjects= require('./src/addTaskToProject');
 module.exports.addTaskTags= require('./src/addTaskTags');
 module.exports.setModifiedDate= require('./src/setModifiedDate');
+module.exports.handleIterativeErrors= require('./src/handleIterativeErrors');

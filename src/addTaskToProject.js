@@ -4,17 +4,21 @@ const asana = require('asana');
 const client = asana.Client.create().useAccessToken(process.env.TD_ASANA_ACCESS_TOKEN);
 
 module.exports = (event, context, callback) => {
+	
+	var iteration = event;
+	
+	if( ! iteration.hasOwnProperty('taskID') || isNaN( taskID ) ) {
+		callback(null, iteration);
+	} else {
+		const taskID = iteration.taskID;
+		var mods = {};
 
-	const taskID = event.taskID;
-	var mods = {};
-	
-	
-	if( ! taskID || isNaN( taskID ) ) {
-		var error = new Error("Invalid task identifier: '"+taskID+'.');
-		callback(error);
-	}
-	else {
 		if( event.hasOwnProperty('modifications') ) {
+			
+			var tName = taskID;
+			if( iteration.hasOwnProperty('taskInfo') && iteration.taskInfo.hasOwnProperty('name') ) {
+				tName = iteration.taskInfo.name;	
+			}
 			
 			//store all the projects we want to add this task to in an array.
 			var projects = [];
@@ -38,26 +42,37 @@ module.exports = (event, context, callback) => {
 						return;
 					})
 					.catch(function(error) {
-				        console.log(error);
+						var errorReport = "\n Could not add task "+tName+" to Project "+instance.project+"\n"+error;
+						if( iteration.hasOwnProperty('errorReport') ) {
+							iteration.errorReport += errorReport;
+						} else {
+							iteration.errorReport = errorReport;
+						}
+						callback(null, iteration);
 						return;
 				    });
 					
 				}))
 				.then(function(response) {
-					callback(null);
+					callback(null, iteration);
 				})
 				.catch(function(error) {
-			        console.log(error);
-					callback(null);
+					var errorReport = "\n An error occurred attempting to add projects to "+tName+"\n"+error;
+					if( iteration.hasOwnProperty('errorReport') ) {
+						iteration.errorReport += errorReport;
+					} else {
+						iteration.errorReport = errorReport;
+					}
+					callback(null, iteration);
 			    });
 			} else {
-				callback(null) //nothing to update
+				callback(null, iteration) //nothing to update
 			}
 			
 		}
 		else {
 			//no changes requested.
-			callback( null );
+			callback( null, iteration );
 		}
 		
 	} //we have what looks like a valid task id
