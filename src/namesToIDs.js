@@ -16,8 +16,8 @@ module.exports = (event, context, callback) => {
 	var inputObject = event;
 	var mode = event.mode;
 	
-	var argsWithIDs = ["id", "name", "project", "section", "tag","assignee","followers", "parent", "memberships"];
-	var lookupTypes = ["task", "task", "project", "section", "tag", "user", "user", "task", "project"]
+	var argsWithIDs = ["id", "name", "project", "projects", "section", "tag", "tags", "assignee","followers", "parent", "memberships"];
+	var lookupTypes = ["task", "task", "project", "project", "section", "tag", "tag", "user", "user", "task", "project"]
 	var workspace = process.env.TD_DEFAULT_WORKSPACE;
 	if( event.request && event.request.workspace ) { event.request.workspace; }
 	
