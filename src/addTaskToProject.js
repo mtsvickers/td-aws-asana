@@ -14,41 +14,45 @@ module.exports = (event, context, callback) => {
 		callback(error);
 	}
 	else {
-		if( event.modifications && ( event.modifications.projects || event.modifications.memberships ) ) {
+		if( event.hasOwnProperty('modifications') ) {
 			
 			//store all the projects we want to add this task to in an array.
 			var projects = [];
-			if( event.modifications.projects && event.modifications.projects.length > 0 ) {
+			if( event.modifications.hasOwnProperty('projects') && event.modifications.projects.length > 0 ) {
 				var singleProjects = event.modifications.projects;
 				for( var i = 0; i < singleProjects.length; i++ ) {
 					projects.push( { project: singleProjects[i] } );
 				}
 			}
-			if( event.modifications.memberships && event.modifications.memberships.length > 0 ) {
+			if( event.modifications.hasOwnProperty('memberships') && event.modifications.memberships.length > 0 ) {
 				projects = projects.concat( event.modifications.memberships );
 			}
 			
 			//for each element in the array, add the task to that.
-			var Promise = require('bluebird');
-			Promise.all(projects.map(function(instance) {
-				
-				return client.tasks.addProject(taskID, instance)
+			if( projects.length > 0 ) {
+				var Promise = require('bluebird');
+				Promise.all(projects.map(function(instance) {
+					
+					return client.tasks.addProject(taskID, instance)
+					.then(function(response) {
+						return;
+					})
+					.catch(function(error) {
+				        console.log(error);
+						return;
+				    });
+					
+				}))
 				.then(function(response) {
-					return;
+					callback(null);
 				})
 				.catch(function(error) {
 			        console.log(error);
-					return;
+					callback(null);
 			    });
-				
-			}))
-			.then(function(response) {
-				callback(null);
-			})
-			.catch(function(error) {
-		        console.log(error);
-				callback(null);
-		    });
+			} else {
+				callback(null) //nothing to update
+			}
 			
 		}
 		else {

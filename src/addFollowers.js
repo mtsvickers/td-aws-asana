@@ -14,7 +14,7 @@ module.exports = (event, context, callback) => {
 		callback(error);
 	}
 	else {
-		if( event.modifications && event.modifications.followers && event.modifications.followers.length > 0 ) {
+		if( event.hasOwnProperty('modifications') && event.modifications.hasOwnProperty('followers') && event.modifications.followers.length > 0 ) {
 			
 			var data = { followers: event.modifications.followers };
 			

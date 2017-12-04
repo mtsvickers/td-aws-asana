@@ -6,7 +6,7 @@ module.exports = (event, context, callback) => {
 	};
 	
 	//Make sure we have tasks to work with
-	if( ! event.foundTasks || event.foundTasks.length <= 0 || ! event.iteration || ! event.iteration.index ) {
+	if( ! event.hasOwnProperty('foundTasks') || ! event.hasOwnProperty('iteration') || ! event.iteration.hasOwnProperty('index') ) {
 		callback(null, iteration);
 	} else {
 		

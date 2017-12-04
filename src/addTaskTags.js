@@ -14,7 +14,7 @@ module.exports = (event, context, callback) => {
 		callback(error);
 	}
 	else {
-		if( event.modifications && event.modifications.tags && event.modifications.tags.length > 0 ) {
+		if( event.hasOwnProperty('modifications') && event.modifications.hasOwnProperty('tags') && event.modifications.tags.length > 0 ) {
 			var tags = event.modifications.tags;
 			
 			//for each tag in the array, add the task to that.
@@ -34,11 +34,11 @@ module.exports = (event, context, callback) => {
 				
 			}))
 			.then(function(response) {
-				callback(null, "success");
+				callback(null);
 			})
 			.catch(function(error) {
 		        console.log(error);
-				callback(null, "error");
+				callback(null);
 		    });
 			
 		}

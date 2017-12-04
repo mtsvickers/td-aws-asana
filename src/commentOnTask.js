@@ -6,7 +6,7 @@ const client = asana.Client.create().useAccessToken(process.env.TD_ASANA_ACCESS_
 module.exports = (event, context, callback) => {
 	
 	//Send errors if we got invalid input.
-	if( ! event.taskID ) {
+	if( ! event.hasOwnProperty('taskID') ) {
 		var error = new Error("No task ID given.");
 		callback(error);
 	}
@@ -14,7 +14,7 @@ module.exports = (event, context, callback) => {
 		var error = new Error("Invalid task identifier. Expected int or string int, got "+typeof event.taskID+" '"+event.taskID+'.');
 		callback(error);
 	}
-	else if( ! event.comment ) {
+	else if( ! event.hasOwnProperty('comment') ) {
 		var error = new Error("No comment provided");
 		callback(error);
 	}

@@ -91,16 +91,14 @@ module.exports = (event, context, callback) => {
 								'project': m[0],
 								'section': m[1]	
 							};
-							memberships.push(member);
-							itemVal.push(m[0]);
-							
+							memberships.push(member);							
 						}
 					} else {
 						itemVal.push(tempVal[i]);
 					}
 				}
 				if( memberships ) {
-					if( parsedData.memberships ) {
+					if( parsedData.hasOwnProperty('memberships') && parsedData.memberships.length > 0 ) {
 						parsedData.memberships = parsedData.memberships.concat(memberships);
 					} else {
 						parsedData.memberships = memberships;
@@ -146,11 +144,11 @@ module.exports = (event, context, callback) => {
 	**************/
 	
 	//If we weren't sent any data, throw an error.
-	if( ! event.data ) {
+	if( ! event.hasOwnProperty('data') || event.data.length <= 0 ) {
 		var error = new Error("No Data provided");
 		callback(error);
 	}
-	else if( ! event.mode ) {
+	else if( ! event.hasOwnProperty('mode') ) {
 		var error = new Error("No Mode provided");
 		callback(error);
 	}
@@ -173,7 +171,7 @@ module.exports = (event, context, callback) => {
 				if( parsedMod ) {
 					formattedRequest.modifications = parsedMod;
 					//new task name would have gone into ID. Store it in name instead.
-					if( formattedRequest.modifications.id ) {
+					if( formattedRequest.modifications.hasOwnProperty('id') ) {
 						formattedRequest.modifications.name = formattedRequest.modifications.id;
 						delete formattedRequest.modifications.id;
 					}
@@ -182,7 +180,7 @@ module.exports = (event, context, callback) => {
 			
 			parsedData = parseArguments( dataString, mode );
 			if( parsedData ) {
-				if( mode === "UpdateTaskWithID" && ! formattedRequest.modifications ) {
+				if( mode === "UpdateTaskWithID" && ! formattedRequest.hasOwnProperty('modifications') ) {
 					//if we had an id, we probably didn't use a % because everything is likely a modification. Just store this in mod.
 					formattedRequest.modifications = parsedData;
 				} 
@@ -192,7 +190,7 @@ module.exports = (event, context, callback) => {
 			}
 			
 			//Task IDs are used often. If we have that, let's store it higher up in the object hierarchy to make it easy to access.
-			if( formattedRequest.request && ! event.taskID && formattedRequest.request.id ) {
+			if( formattedRequest.hasOwnProperty('request') && ! event.hasOwnProperty('taskID') && formattedRequest.request.hasOwnProperty('id') ) {
 				formattedRequest.taskID = formattedRequest.request.id;
 			}
 				

@@ -14,20 +14,18 @@ module.exports = (event, context, callback) => {
 	var getTaskMeta = event.request;
 	
 	//If we don't have a project or tag, make sure we have an assignee and workspace.
-	if( ! getTaskMeta.project && ! getTaskMeta.tag ) {
+	if( ! getTaskMeta.hasOwnProperty('project') && ! getTaskMeta.hasOwnProperty('tag') ) {
 		
-		if( ! getTaskMeta.assignee ) {
+		if( ! getTaskMeta.hasOwnProperty('assignee') ) {
 			getTaskMeta.assignee = "me";
 		}
 		
-		if( ! getTaskMeta.workspace ) {
+		if( ! getTaskMeta.hasOwnProperty('workspace') ) {
 			getTaskMeta.workspace = process.env.TD_DEFAULT_WORKSPACE;
 		}
 		
 	}
-	
-	console.log(getTaskMeta);
-	
+		
 	//Try to get the tasks and return the response.
 	client.tasks.findAll(getTaskMeta)
 	.then(function(response) {

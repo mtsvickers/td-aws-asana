@@ -1,20 +1,68 @@
 {
-  "request": {
-    "assignee": "32140157319985",
-    "workspace": "46870724112480",
-    "modified_since": "2017-11-22T02:06:58.158Z"
-  },
-  "foundTasks": [
-    {
-      "id": "493495796187752",
-      "name": "New task Test #04-25-2018 ~These are notes I want in the task. >me"
+  "resource": "arn:aws:lambda:us-west-2:972085233183:function:td-aws-asana-dev-iterateTasks",
+  "input": {
+    "request": {
+      "assignee": "32140157319985",
+      "workspace": "46870724112480",
+      "modified_since": "2017-11-22T02:06:58.158Z"
     },
-    {
-      "id": "493386579491201",
-      "name": "All Options"
+    "foundTasks": [
+      {
+        "id": 494233381423046,
+        "name": "testing Sections +MSV:Anoth >me +Test"
+      },
+      {
+        "id": 494231534907626,
+        "name": "Testing All Update features +MSV @msv +test @bob >me <philip #2018-04-25 ~”here are notes in a task we are testing”"
+      },
+      {
+        "id": 491992396087549,
+        "name": "Task created from state machine"
+      },
+      {
+        "id": 491409630211014,
+        "name": "All Options"
+      }
+    ],
+    "iteration": {
+      "execute": true,
+      "mode": "UpdateTaskWithID",
+      "index": 0,
+      "taskID": 494233381423046,
+      "taskInfo": {
+        "id": 494233381423046,
+        "name": "testing Sections +MSV:Anoth >me +Test",
+        "projects": [],
+        "assignee": {
+          "id": 32140157319985,
+          "name": "Marissa Solomon"
+        },
+        "assignee_status": "inbox",
+        "created_at": "2017-12-04T15:28:51.885Z",
+        "completed_at": null,
+        "completed": false,
+        "due_on": null,
+        "due_at": null,
+        "notes": ""
+      },
+      "needsUpdating": true,
+      "data": "testing Sections +MSV:Anoth >me +Test",
+      "modifications": {
+        "name": "testing Sections",
+        "memberships": [
+          {
+            "project": "490764297621890",
+            "section": "490764297621896"
+          }
+        ],
+        "projects": [
+          "490764297621890",
+          "490764297621890"
+        ],
+        "assignee": "me"
+      },
+      "result": null
     }
-  ],
-  "iteration": {
-    "index": "-1"
-  }
+  },
+  "timeoutInSeconds": null
 }

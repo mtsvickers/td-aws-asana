@@ -4,7 +4,7 @@ module.exports = (event, context, callback) => {
 	eventObj.needsUpdating = false;
 	
 	//Make sure we have a task to work with
-	if( ! event.taskInfo || event.taskInfo.length <= 0 ) {
+	if( ! event.hasOwnProperty('taskInfo') || event.taskInfo.hasOwnProperty('assignee_status') ) {
 		callback(null, eventObj);
 	} else {
 		
@@ -14,11 +14,11 @@ module.exports = (event, context, callback) => {
 			//not in the inbox. Skip.
 			callback(null, eventObj);
 		}
-		else if( ( info.projects && info.projects.length > 0 ) || ( info.tags && info.tags.length > 0 ) ) {
+		else if( ( info.hasOwnProperty('projects') && info.projects.length > 0 ) || ( info.hasOwnProperty('tags') && info.tags.length > 0 ) ) {
 			//this has already been put in a project or tag, so it's probably not a dynamically created task. Skip it.
 			callback(null, eventObj);
 		}
-		else if( ! info.name || info.name.length <= 0 ) {
+		else if( ! info.hasOwnProperty('name') || info.name.length <= 0 ) {
 			//no valid task name. Skip.
 			callback(null, eventObj);
 		}
