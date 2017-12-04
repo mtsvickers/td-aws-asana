@@ -1,0 +1,111 @@
+{
+  "Comment": "Get all user inbox tasks not assigned to a project or tag and try to update them based on arguments in the title",
+  "StartAt": "Find All User Tasks",
+  "States": {
+    "Find All User Tasks": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:us-west-2:972085233183:function:td-aws-asana-dev-findAsanaTasks",
+      "ResultPath": "$.foundTasks",
+      "Next": "Begin Iteration"
+    },
+    "Begin Iteration": {
+      "Type": "Pass",
+      "Result": {
+        "index": -1
+      },
+      "ResultPath": "$.iteration",
+      "Next": "Iterate Tasks"
+    },
+    "Iterate Tasks": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:us-west-2:972085233183:function:td-aws-asana-dev-iterateTasks",
+      "ResultPath": "$.iteration",
+      "Next": "Stop or Continue?"
+    },
+    "Stop or Continue?": {
+      "Type": "Choice",
+      "Choices": [{
+        "Variable": "$.iteration.execute",
+        "BooleanEquals": true,
+        "Next": "Get Single Task Information"
+      }],
+      "Default": "Finished Execution"
+    },
+    
+    "Get Single Task Information": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:us-west-2:972085233183:function:td-aws-asana-dev-getAsanaTask",
+      "InputPath": "$.iteration",
+      "ResultPath": "$.iteration.taskInfo",
+      "Next": "Check Task Status"
+    },
+    "Check Task Status": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:us-west-2:972085233183:function:td-aws-asana-dev-checkTaskStatus",
+      "InputPath": "$.iteration",
+      "ResultPath": "$.iteration",
+      "Next": "Does this Task Need Updating?"
+    },
+    "Does this Task Need Updating?": {
+      "Type": "Choice",
+      "Choices": [{
+        "Variable": "$.iteration.needsUpdating",
+        "BooleanEquals": true,
+        "Next": "Parse Task Title"
+      }],
+      "Default": "Iterate Tasks"
+    },
+    
+    "Parse Task Title": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:us-west-2:972085233183:function:td-aws-asana-dev-parseTDAsanaRequest",
+      "InputPath": "$.iteration",
+      "ResultPath": "$.iteration",
+      "Next": "Convert Named Elements to IDs"
+    },
+    "Convert Named Elements to IDs": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:us-west-2:972085233183:function:td-aws-asana-dev-namesToIDs",
+      "InputPath": "$.iteration",
+      "ResultPath": "$.iteration",
+      "Next": "Update General Task Info"
+    },
+    "Update General Task Info": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:us-west-2:972085233183:function:td-aws-asana-dev-updateAsanaTask",
+      "InputPath": "$.iteration",
+      "ResultPath": "$.iteration.result",
+      "Next": "Add Task to Project(s)"
+    },
+    "Add Task to Project(s)": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:us-west-2:972085233183:function:td-aws-asana-dev-addTaskToProjects",
+      "InputPath": "$.iteration",
+      "ResultPath": "$.iteration.result",
+      "Next": "Add Task to Tag(s)"
+    },
+    "Add Task to Tag(s)": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:us-west-2:972085233183:function:td-aws-asana-dev-addTaskTags",
+      "InputPath": "$.iteration",
+      "ResultPath": "$.iteration.result",
+      "Next": "Add Task Followers"
+    },
+    "Add Task Followers": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:us-west-2:972085233183:function:td-aws-asana-dev-addTaskFollowers",
+      "InputPath": "$.iteration",
+      "ResultPath": "$.iteration.result",
+      "Next": "Iterate Tasks"
+    },
+    
+    "Finished Execution": {
+      "Type": "Pass",
+      "Result": {
+        "result": "Finished Execution"
+      },
+      "ResultPath": "$.result",
+      "End": true
+    }
+  }
+}
