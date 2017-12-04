@@ -10,7 +10,11 @@ Lambda functions which make calls to the Asana API to run various tasks such as 
 [Get ID by Name](#getID) - takes a single string name and a type (project, tag, etc) and returns the id based on a typeahead search<br/>
 [Add Task](#addTask) - adds a new Asana task based on given parameters<br/>
 [Update Task](#updateTask) - updates a task based on a given task ID and update parameters<br/>
+[Add Followers](#addFollowers) - adds followers to an existing task<br/>
+[Add Task to Projects](#addToProjects) - adds a task to projects and/or sections.
+[Add Tags to Task](#addTagsToTask) - adds tags to a given task.
 [Comment On Task](#commentTask) - adds a given comment to the task with the given ID<br/>
+[setModifiedDate](#setModDate) - if no modification date is given, this function sets it to three hours ago.
 
 ## <a name="argkey"></a>Argument Key
 These are all of the available argument symbols used by these functions.
@@ -414,6 +418,82 @@ None if successful. Error message if not.
 }
 ```
 
+## <a name="addFollowers"></a>Add Followers
+Adds followers to an existing Task
+
+### Input
+`taskID` - Required. The ID of the task to add the followers to<br/>
+`modifications.followers` - An array of follower IDs. If none are provided this function does nothing.
+
+### Output
+The ID of the task we added followers to.
+
+### Example Input
+```
+{
+	"taskID": "490764297621893",
+	"modifications": { 
+		"followers": ["123456789", "45678909"]
+	}
+}
+```
+
+## <a name="addToProjects"></a>Add Task To Projects
+Adds an existing task to projects and/or sections
+
+### Input
+`taskID` - Required. The ID of the task to add to these projects/sections<br/>
+`modifications.projects` - An array of project IDs.<br/>
+`modifications.memberships` - an array of objects containing project:section associations (when adding task to a section)<br/>
+`modifications.memberships[0].project` - the ID of the project this section is in<br/>
+`modifications.memberships[0].section` - the ID of the section to add this task to.<br/>
+If neither .projects nor .memberships properties are set, this function does nothing.
+
+### Output
+None.
+
+### Example Input
+```
+{
+	"taskID": "490764297621893",
+	"modifications": { 
+		"projects": ["123456789", "45678909"],
+		"memberships": [
+			{
+				"project": "1234567",
+				"section": "8901234"
+			},
+			{
+				"project": "0987654",
+				"section": "3210987"
+			}
+		]
+	}
+}
+	
+```
+
+
+## <a name="addTagsToTask"></a>Add Tags to Task
+Adds existing tags to a given task.
+
+### Input
+`taskID` - Required. The task to add the tags to
+`modifications.tags` - An array of tag IDs to add to the task. If not provided, this function does nothing.
+
+### Output
+None.
+
+### Example Input
+```
+{
+	"taskID": "490764297621893",
+	"modifications": { 
+		"tags": [123456789, 45678909]
+	}
+}
+```
+
 ## <a name="commentTask"></a>Comment On Task
 Add a comment to an existing task.
 
@@ -434,3 +514,31 @@ The comment ID.
 
 ### Example Output
 `123456789`
+
+## <a name="setModDate"></a>Set Modified Since Date
+Adds modified_since property to the input object if it doesn't exist, and sets it to three hours ago.
+
+### Input
+Some object. If modified_since is already set, this returns the object as is.
+
+### Output
+The input object with a `modified_since` property set to 3 hours ago.
+
+### Example Input
+```
+{
+  "request": {
+    "assignee": "32140157319985",
+  }
+}
+```
+
+### Example Output
+```
+{
+  "request": {
+    "assignee": "32140157319985",
+    "modified_since": "2017-11-22T02:06:58.158Z"
+  }
+}
+```

@@ -50,3 +50,5 @@ functions:
     handler: handlers.addTaskToProjects
   addTaskTags:
     handler: handlers.addTaskTags
+  setModifiedDate:
+    handler: handlers.setModifiedDate
