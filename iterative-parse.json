@@ -1,7 +1,14 @@
 {
   "Comment": "Get all user inbox tasks not assigned to a project or tag and try to update them based on arguments in the title",
-  "StartAt": "Find All User Tasks",
+  "StartAt": "Add Modified Since",
   "States": {
+    "Add Modified Since": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:us-west-2:972085233183:function:td-aws-asana-dev-setModifiedDate",
+      "InputPath": "$.request",
+      "ResultPath": "$.request",
+      "Next": "Find All User Tasks"
+    },
     "Find All User Tasks": {
       "Type": "Task",
       "Resource": "arn:aws:lambda:us-west-2:972085233183:function:td-aws-asana-dev-findAsanaTasks",

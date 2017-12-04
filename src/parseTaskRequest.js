@@ -18,7 +18,7 @@ module.exports = (event, context, callback) => {
 	 * @param string argString - the string of arguments to parse.
 	 */
 	function parseArguments( argString, mode ) {
-		var symbols = [ "+", "@", "#", ">", "<", "!", "$", "^", "*", "~", "|" ];
+		var symbols = [ "+", "#", "*", "@", "<", "!", "$", "^", "*", "~", "|" ];
 		var argNames = [ "project", "tag", "due_on", "assignee", "followers", "completed_since", "modified_since", "parent", "workspace", "notes", "opt_fields"];
 		
 		//Pluralize if we're going to need arrays
