@@ -16,7 +16,8 @@ module.exports = (event, context, callback) => {
 	else {
 		if( event.modifications && event.modifications.followers && event.modifications.followers.length > 0 ) {
 			
-			var data = event.modifications.followers;
+			var data = { followers: event.modifications.followers };
+			
 			client.tasks.addFollowers(taskID, data)
 			.then(function(response) {
 				console.log(response);
