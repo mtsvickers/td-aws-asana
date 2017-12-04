@@ -43,11 +43,11 @@ module.exports = (event, context, callback) => {
 				
 			}))
 			.then(function(response) {
-				callback(null, "success");
+				callback(null);
 			})
 			.catch(function(error) {
 		        console.log(error);
-				callback(null, "error");
+				callback(null);
 		    });
 			
 		}
