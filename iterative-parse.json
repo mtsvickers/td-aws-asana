@@ -36,7 +36,7 @@
         "BooleanEquals": true,
         "Next": "Get Single Task Information"
       }],
-      "Default": "Finished Execution"
+      "Default": "Finished Execution, Handle Errors"
     },
     
     "Get Single Task Information": {

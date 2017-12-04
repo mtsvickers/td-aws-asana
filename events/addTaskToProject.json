@@ -2,17 +2,17 @@
     "execute": true,
     "mode": "UpdateTaskWithID",
     "index": 0,
-    "taskID": 494172103931725,
+    "taskID": 494742853412034,
     "taskInfo": {
-      "id": 494172103931725,
-      "name": "All Update features test +MSV @msv +test @bob >me <philip #2018-04-25 ~”here are notes in a task we are testing”",
+      "id": 494742853412034,
+      "name": "This one should work too. +msv @me",
       "projects": [],
       "assignee": {
         "id": 32140157319985,
-        "name": "Marissa Solomon"
+        "name": "Marissa Solomon-Vickers"
       },
       "assignee_status": "inbox",
-      "created_at": "2017-12-04T14:58:15.277Z",
+      "created_at": "2017-12-04T20:27:29.261Z",
       "completed_at": null,
       "completed": false,
       "due_on": null,
@@ -20,23 +20,13 @@
       "notes": ""
     },
     "needsUpdating": true,
-    "data": "All Update features test +MSV @msv +test @bob >me <philip #2018-04-25 ~”here are notes in a task we are testing”",
+    "data": "This one should work too. +msv @me",
     "modifications": {
-      "name": "All Update features test",
+      "name": "This one should work too.",
       "projects": [
-        "490764297621890",
         "490764297621890"
       ],
-      "tags": [
-        "490864456721253",
-        "494069834562744"
-      ],
-      "assignee": "me",
-      "followers": [
-        "16089738883177"
-      ],
-      "due_on": "2018-04-25",
-      "notes": "”here are notes in a task we are testing”"
+      "assignee": "me"
     },
-    "result": 494172103931725
-}
+    "result": 494742853412034
+  }

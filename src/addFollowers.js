@@ -7,7 +7,7 @@ module.exports = (event, context, callback) => {
 
 	var iteration = event;
 	
-	if( ! iteration.hasOwnProperty('taskID') || isNaN( taskID ) ) {
+	if( ! iteration.hasOwnProperty('taskID') || isNaN( iteration.taskID ) ) {
 		callback(null, iteration);
 	} else {
 		
