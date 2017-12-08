@@ -1,4 +1,5 @@
 #!/bin/bash
 
-# AWS Account ID
+# TylerDigital AWS Account ID
 AWS_ACCOUNT_ID=''
+DEV_REGION='us-west-2' # Dev Region
