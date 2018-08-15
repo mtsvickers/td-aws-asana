@@ -1,0 +1,116 @@
+{
+	"Comment": "Get all user inbox tasks not assigned to a project or tag and try to update them based on arguments in the title",
+	"StartAt": "Add Modified Since",
+	"States": {
+	  "Add Modified Since": {
+		"Type": "Task",
+		"Resource": "arn:aws:lambda:us-east-2:409311298442:function:td-aws-asana-production-setModifiedDate",
+		"InputPath": "$.request",
+		"ResultPath": "$.request",
+		"Next": "Find All User Tasks"
+	  },
+	  "Find All User Tasks": {
+		"Type": "Task",
+		"Resource": "arn:aws:lambda:us-east-2:409311298442:function:td-aws-asana-production-findAsanaTasks",
+		"ResultPath": "$.foundTasks",
+		"Next": "Begin Iteration"
+	  },
+	  "Begin Iteration": {
+		"Type": "Pass",
+		"Result": {
+		  "index": -1
+		},
+		"ResultPath": "$.iteration",
+		"Next": "Iterate Tasks"
+	  },
+	  "Iterate Tasks": {
+		"Type": "Task",
+		"Resource": "arn:aws:lambda:us-east-2:409311298442:function:td-aws-asana-production-iterateTasks",
+		"ResultPath": "$.iteration",
+		"Next": "Stop or Continue?"
+	  },
+	  "Stop or Continue?": {
+		"Type": "Choice",
+		"Choices": [{
+		  "Variable": "$.iteration.execute",
+		  "BooleanEquals": true,
+		  "Next": "Get Single Task Information"
+		}],
+		"Default": "Finished Execution, Handle Errors"
+	  },
+	  
+	  "Get Single Task Information": {
+		"Type": "Task",
+		"Resource": "arn:aws:lambda:us-east-2:409311298442:function:td-aws-asana-production-getAsanaTask",
+		"InputPath": "$.iteration",
+		"ResultPath": "$.iteration",
+		"Next": "Check Task Status"
+	  },
+	  "Check Task Status": {
+		"Type": "Task",
+		"Resource": "arn:aws:lambda:us-east-2:409311298442:function:td-aws-asana-production-checkTaskStatus",
+		"InputPath": "$.iteration",
+		"ResultPath": "$.iteration",
+		"Next": "Does this Task Need Updating?"
+	  },
+	  "Does this Task Need Updating?": {
+		"Type": "Choice",
+		"Choices": [{
+		  "Variable": "$.iteration.needsUpdating",
+		  "BooleanEquals": true,
+		  "Next": "Parse Task Title"
+		}],
+		"Default": "Iterate Tasks"
+	  },
+	  
+	  "Parse Task Title": {
+		"Type": "Task",
+		"Resource": "arn:aws:lambda:us-east-2:409311298442:function:td-aws-asana-production-parseTDAsanaRequest",
+		"InputPath": "$.iteration",
+		"ResultPath": "$.iteration",
+		"Next": "Convert Named Elements to IDs"
+	  },
+	  "Convert Named Elements to IDs": {
+		"Type": "Task",
+		"Resource": "arn:aws:lambda:us-east-2:409311298442:function:td-aws-asana-production-namesToIDs",
+		"InputPath": "$.iteration",
+		"ResultPath": "$.iteration",
+		"Next": "Update General Task Info"
+	  },
+	  "Update General Task Info": {
+		"Type": "Task",
+		"Resource": "arn:aws:lambda:us-east-2:409311298442:function:td-aws-asana-production-updateAsanaTask",
+		"InputPath": "$.iteration",
+		"ResultPath": "$.iteration",
+		"Next": "Add Task to Project(s)"
+	  },
+	  "Add Task to Project(s)": {
+		"Type": "Task",
+		"Resource": "arn:aws:lambda:us-east-2:409311298442:function:td-aws-asana-production-addTaskToProjects",
+		"InputPath": "$.iteration",
+		"ResultPath": "$.iteration",
+		"Next": "Add Task to Tag(s)"
+	  },
+	  "Add Task to Tag(s)": {
+		"Type": "Task",
+		"Resource": "arn:aws:lambda:us-east-2:409311298442:function:td-aws-asana-production-addTaskTags",
+		"InputPath": "$.iteration",
+		"ResultPath": "$.iteration",
+		"Next": "Add Task Followers"
+	  },
+	  "Add Task Followers": {
+		"Type": "Task",
+		"Resource": "arn:aws:lambda:us-east-2:409311298442:function:td-aws-asana-production-addTaskFollowers",
+		"InputPath": "$.iteration",
+		"ResultPath": "$.iteration",
+		"Next": "Iterate Tasks"
+	  },
+	  
+	  "Finished Execution, Handle Errors": {
+		"Type": "Task",
+		"Resource": "arn:aws:lambda:us-east-2:409311298442:function:td-aws-asana-production-handleIterativeErrors",
+		"ResultPath": "$.result",
+		"End": true
+	  }
+	}
+  }

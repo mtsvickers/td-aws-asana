@@ -7,9 +7,9 @@ service: td-aws-asana
 provider:
   name: aws
   runtime: nodejs6.10
-  region: us-west-2
+  region: us-east-2
   versionFunctions: false
-  profile: asanatest
+  profile: awsasana
   memorySize: 256
   environment:
   REGION: ${opt:region, self:provider.region}
@@ -32,6 +32,7 @@ functions:
     handler: handlers.getTask
   findAsanaTasks:
     handler: handlers.findTasks
+    timeout: 30
   addAsanaTask:
     handler: handlers.addTask
   updateAsanaTask:
