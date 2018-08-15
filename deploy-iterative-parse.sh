@@ -12,18 +12,30 @@ if [[ ! -f "$SFN_NAME.json" ]]; then
 fi
 
 source deployenv.sh
-ACCOUNT_ID=$AWS_ACCOUNT_ID
-REGION='us-west-2' # Dev Region
+if [[ -z $AWS_ACCOUNT_ID ]]; then
+	echo 'AWS_ACCOUNT_ID not defined in deployenv.sh'
+	exit 1
+fi
+if [[ -z $REGION ]]; then
+	echo 'REGION not defined in deployenv.sh'
+	exit 1
+fi
+
+REGION=$DEV_REGION # Dev Region
+ACCOUNT_ID=$AWS_ACCOUNT_ID # AWS Account ID
 VERSION_NUMBER='0.0.1'
 
-echo "Deploying to dev on $REGION"
-serverless deploy
+if [[ "$1" != 'skip-serverless' ]]; then
+	echo "Deploying to dev on $REGION"
+	npm install
+	serverless deploy
+fi
 
 aws stepfunctions create-state-machine \
 --name "$SFN_NAME"-v"$VERSION_NUMBER" \
 --region "$REGION" \
 --role-arn arn:aws:iam::"$ACCOUNT_ID":role/service-role/StatesExecutionRole-"$REGION" \
---definition "$(cat $SFN_NAME)"
+--definition "$(cat $SFN_NAME.json)"
 
 exit
 # TODO: When Deploying to Production, Remove Exit and Run Below
